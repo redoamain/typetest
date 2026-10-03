@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "language": "id",
+    "text": "Pendidikan adalah senjata paling mematikan di dunia, karena dengan pendidikan Anda dapat mengubah dunia.",
+    "author": "Nelson Mandela",
+    "difficulty": "medium"
+  },
+  {
+    "id": 2,
+    "language": "id",
+    "text": "Beri aku seribu orang tua, niscaya akan kucabut semeru dari akarnya. Beri aku sepuluh pemuda, niscaya akan kuguncangkan dunia.",
+    "author": "Ir. Soekarno",
+    "difficulty": "medium"
+  },
+  {
+    "id": 3,
+    "language": "id",
+    "text": "Kegagalan hanya terjadi bila kita menyerah. Setiap langkah kecil membawa kita lebih dekat menuju puncak kesuksesan.",
+    "author": "B.J. Habibie",
+    "difficulty": "easy"
+  },
+  {
+    "id": 4,
+    "language": "id",
+    "text": "Kecepatan mengetik bukan hanya tentang kecepatan jari, melainkan keselarasan antara pikiran, mata, dan ketenangan hati.",
+    "author": "Anonim",
+    "difficulty": "easy"
+  },
+  {
+    "id": 5,
+    "language": "id",
+    "text": "Hanya mereka yang berani gagal besar yang dapat mencapai keberhasilan yang luar biasa dalam kehidupan.",
+    "author": "Robert F. Kennedy",
+    "difficulty": "medium"
+  },
+  {
+    "id": 6,
+    "language": "en",
+    "text": "Simplicity is the soul of efficiency. The best code is the code that is never written, but when written, it is clear and precise.",
+    "author": "Austin Freeman",
+    "difficulty": "medium"
+  },
+  {
+    "id": 7,
+    "language": "en",
+    "text": "Stay hungry, stay foolish. Your time is limited, so do not waste it living someone else's life.",
+    "author": "Steve Jobs",
+    "difficulty": "easy"
+  },
+  {
+    "id": 8,
+    "language": "en",
+    "text": "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+    "author": "Nelson Mandela",
+    "difficulty": "easy"
+  },
+  {
+    "id": 9,
+    "language": "en",
+    "text": "Success is not final, failure is not fatal: it is the courage to continue that counts in every endeavor.",
+    "author": "Winston Churchill",
+    "difficulty": "medium"
+  }
+]
