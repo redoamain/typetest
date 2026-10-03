@@ -1,7 +1,66 @@
 @import 'tailwindcss';
 
+@theme {
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--color-card: var(--card);
+	--color-card-foreground: var(--card-foreground);
+	--color-primary: var(--primary);
+	--color-primary-foreground: var(--primary-foreground);
+	--color-secondary: var(--secondary);
+	--color-secondary-foreground: var(--secondary-foreground);
+	--color-muted: var(--muted);
+	--color-muted-foreground: var(--muted-foreground);
+	--color-accent: var(--accent);
+	--color-accent-foreground: var(--accent-foreground);
+	--color-destructive: var(--destructive);
+	--color-destructive-foreground: var(--destructive-foreground);
+	--color-border: var(--border);
+	--color-input: var(--input);
+	--color-ring: var(--ring);
+}
+
 :root {
+	--background: #f8fafc;
+	--foreground: #0f172a;
+	--card: #ffffff;
+	--card-foreground: #0f172a;
+	--primary: #f59e0b;
+	--primary-foreground: #0f172a;
+	--secondary: #f1f5f9;
+	--secondary-foreground: #0f172a;
+	--muted: #f1f5f9;
+	--muted-foreground: #64748b;
+	--accent: #f1f5f9;
+	--accent-foreground: #0f172a;
+	--destructive: #ef4444;
+	--destructive-foreground: #ffffff;
+	--border: #e2e8f0;
+	--input: #e2e8f0;
+	--ring: #f59e0b;
+
 	font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+	color-scheme: light dark;
+}
+
+.dark {
+	--background: #090d16;
+	--foreground: #f8fafc;
+	--card: #0f172a;
+	--card-foreground: #f8fafc;
+	--primary: #f59e0b;
+	--primary-foreground: #090d16;
+	--secondary: #1e293b;
+	--secondary-foreground: #f8fafc;
+	--muted: #1e293b;
+	--muted-foreground: #94a3b8;
+	--accent: #1e293b;
+	--accent-foreground: #f8fafc;
+	--destructive: #ef4444;
+	--destructive-foreground: #ffffff;
+	--border: #1e293b;
+	--input: #1e293b;
+	--ring: #f59e0b;
 }
 
 .font-mono {
@@ -21,18 +80,24 @@
 	animation: blinkCursor 1s ease-in-out infinite;
 }
 
-/* Smooth scrollbar styling */
+/* Custom scrollbars */
 ::-webkit-scrollbar {
 	width: 8px;
 	height: 8px;
 }
 ::-webkit-scrollbar-track {
-	background: #0f172a;
+	background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-	background: #334155;
+	background: #cbd5e1;
 	border-radius: 4px;
 }
+.dark ::-webkit-scrollbar-thumb {
+	background: #334155;
+}
 ::-webkit-scrollbar-thumb:hover {
+	background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
 	background: #475569;
 }

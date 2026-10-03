@@ -6,6 +6,20 @@
 	import NameForm from '$lib/components/NameForm.svelte';
 	import { session, loadSession } from '$lib/stores/session.svelte';
 	import type { CompetitionLeaderboardEntry } from '$lib/types';
+	import {
+		Trophy,
+		Medal,
+		Award,
+		Clock,
+		ArrowLeft,
+		CheckCircle2,
+		Flag,
+		RotateCcw,
+		Zap,
+		Target,
+		Check,
+		X
+	} from '@lucide/svelte';
 
 	let { data } = $props();
 
@@ -108,103 +122,111 @@
 	<div>
 		<a
 			href="/competitions"
-			class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-amber-400 transition mb-4"
+			class="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-primary transition mb-4"
 		>
-			<span>←</span>
+			<ArrowLeft class="w-3.5 h-3.5" />
 			<span>Kembali ke Daftar Kompetisi</span>
 		</a>
 
-		<div class="p-6 sm:p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+		<div class="p-6 sm:p-8 bg-card text-card-foreground border border-border rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 			<div>
 				<div class="flex items-center gap-2 mb-2">
-					<span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase {data.competition.status === 'active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-400'}">
-						{data.competition.status === 'active' ? '🟢 Sedang Berlangsung' : '⚪ Selesai'}
+					<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase {data.competition.status === 'active' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-muted text-muted-foreground border border-border'}">
+						<span class="w-1.5 h-1.5 rounded-full {data.competition.status === 'active' ? 'bg-emerald-500' : 'bg-muted-foreground'}"></span>
+						<span>{data.competition.status === 'active' ? 'Sedang Berlangsung' : 'Selesai'}</span>
 					</span>
-					<span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-slate-950 text-slate-400 border border-slate-800">
-						⏱️ {data.competition.duration} Detik
+					<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-mono font-semibold bg-muted text-muted-foreground border border-border">
+						<Clock class="w-3.5 h-3.5 text-primary" />
+						<span>{data.competition.duration} Detik</span>
 					</span>
 				</div>
-				<h1 class="text-2xl sm:text-3xl font-extrabold text-white mb-1">
+				<h1 class="text-2xl sm:text-3xl font-extrabold text-foreground mb-1">
 					{data.competition.title}
 				</h1>
 				{#if data.competition.description}
-					<p class="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
+					<p class="text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
 						{data.competition.description}
 					</p>
 				{/if}
 			</div>
 
 			<div class="text-right shrink-0">
-				<span class="text-2xl font-mono font-bold text-amber-400 block">{data.leaderboard.length}</span>
-				<span class="text-xs text-slate-500">Total Skor Masuk</span>
+				<span class="text-2xl font-mono font-bold text-primary block">{data.leaderboard.length}</span>
+				<span class="text-xs text-muted-foreground">Total Skor Masuk</span>
 			</div>
 		</div>
 	</div>
 
 	<!-- Typing Area or Result or Closed Notice -->
 	{#if !session.ready}
-		<div class="py-12 text-center text-slate-500 text-sm">
+		<div class="py-12 text-center text-muted-foreground text-sm">
 			Memuat sesi...
 		</div>
 	{:else if !session.name}
-		<div class="p-6 bg-slate-900/60 border border-slate-800 rounded-3xl text-center">
+		<div class="p-6 bg-card border border-border rounded-3xl text-center shadow-sm">
 			<NameForm />
 		</div>
 	{:else if data.competition.status !== 'active'}
-		<div class="p-8 bg-slate-900/80 border border-slate-800 rounded-3xl text-center">
-			<span class="text-4xl mb-3 block">🏁</span>
-			<h3 class="text-lg font-bold text-white mb-1">Kompetisi Ini Telah Berakhir</h3>
-			<p class="text-xs text-slate-400 mb-4">
+		<div class="p-8 bg-card border border-border rounded-3xl text-center shadow-sm">
+			<Flag class="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+			<h3 class="text-lg font-bold text-foreground mb-1">Kompetisi Ini Telah Berakhir</h3>
+			<p class="text-xs text-muted-foreground mb-4">
 				Penerimaan skor untuk kompetisi ini sudah ditutup. Lihat podium juara dan papan peringkat akhir di bawah.
 			</p>
 		</div>
 	{:else if submissionResult}
 		<!-- Submission Success Card -->
-		<div class="p-8 bg-slate-900 border border-amber-500/30 rounded-3xl text-center shadow-2xl backdrop-blur">
-			<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20 mb-4">
-				<span>✓ Skor Kompetisi Tersimpan!</span>
+		<div class="p-8 bg-card text-card-foreground border border-primary/30 rounded-3xl text-center shadow-lg">
+			<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-xs font-bold border border-emerald-500/20 mb-4">
+				<CheckCircle2 class="w-4 h-4" />
+				<span>Skor Kompetisi Tersimpan!</span>
 			</div>
 
-			<h2 class="text-2xl font-bold text-white mb-1">Kerja Bagus, {session.name}!</h2>
+			<h2 class="text-2xl font-bold text-foreground mb-1">Kerja Bagus, {session.name}!</h2>
 			{#if submissionResult.rank}
-				<p class="text-sm font-semibold text-amber-400 mb-6">
+				<div class="flex items-center justify-center gap-1.5 text-sm font-semibold text-primary mb-6">
 					{#if submissionResult.rank === 1}
-						🥇 Kamu memimpin di posisi Juara 1!
+						<Trophy class="w-4 h-4 text-amber-500" />
+						<span>Kamu memimpin di posisi Juara 1!</span>
 					{:else if submissionResult.rank === 2}
-						🥈 Kamu berada di posisi Podium Juara 2!
+						<Medal class="w-4 h-4 text-slate-400" />
+						<span>Kamu berada di posisi Podium Juara 2!</span>
 					{:else if submissionResult.rank === 3}
-						🥉 Kamu berada di posisi Podium Juara 3!
+						<Medal class="w-4 h-4 text-amber-700" />
+						<span>Kamu berada di posisi Podium Juara 3!</span>
 					{:else}
-						🏅 Kamu berada di peringkat #{submissionResult.rank} di papan skor!
+						<Award class="w-4 h-4 text-primary" />
+						<span>Kamu berada di peringkat #{submissionResult.rank} di papan skor!</span>
 					{/if}
-				</p>
+				</div>
 			{/if}
 
 			<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-lg mx-auto mb-6 text-center">
-				<div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
-					<span class="text-[11px] text-slate-400 uppercase font-semibold">Kecepatan</span>
-					<p class="text-2xl font-mono font-bold text-emerald-400">{submissionResult.wpm} <span class="text-xs text-slate-500">WPM</span></p>
+				<div class="p-3 bg-muted/40 rounded-2xl border border-border">
+					<span class="text-[11px] text-muted-foreground uppercase font-semibold">Kecepatan</span>
+					<p class="text-2xl font-mono font-bold text-emerald-600 dark:text-emerald-400">{submissionResult.wpm} <span class="text-xs text-muted-foreground">WPM</span></p>
 				</div>
-				<div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
-					<span class="text-[11px] text-slate-400 uppercase font-semibold">Akurasi</span>
-					<p class="text-2xl font-mono font-bold text-cyan-400">{submissionResult.accuracy}%</p>
+				<div class="p-3 bg-muted/40 rounded-2xl border border-border">
+					<span class="text-[11px] text-muted-foreground uppercase font-semibold">Akurasi</span>
+					<p class="text-2xl font-mono font-bold text-sky-600 dark:text-sky-400">{submissionResult.accuracy}%</p>
 				</div>
-				<div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
-					<span class="text-[11px] text-slate-400 uppercase font-semibold">Benar</span>
-					<p class="text-2xl font-mono font-bold text-slate-200">{submissionResult.correctChars}</p>
+				<div class="p-3 bg-muted/40 rounded-2xl border border-border">
+					<span class="text-[11px] text-muted-foreground uppercase font-semibold">Benar</span>
+					<p class="text-2xl font-mono font-bold text-foreground">{submissionResult.correctChars}</p>
 				</div>
-				<div class="p-3 bg-slate-950 rounded-2xl border border-slate-800">
-					<span class="text-[11px] text-slate-400 uppercase font-semibold">Salah</span>
-					<p class="text-2xl font-mono font-bold text-rose-400">{submissionResult.incorrectChars}</p>
+				<div class="p-3 bg-muted/40 rounded-2xl border border-border">
+					<span class="text-[11px] text-muted-foreground uppercase font-semibold">Salah</span>
+					<p class="text-2xl font-mono font-bold text-rose-600 dark:text-rose-400">{submissionResult.incorrectChars}</p>
 				</div>
 			</div>
 
 			<button
 				type="button"
 				onclick={restart}
-				class="py-3 px-8 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl shadow-lg shadow-amber-500/20 transition transform active:scale-95 text-sm"
+				class="py-3 px-8 bg-primary text-primary-foreground font-bold rounded-2xl shadow-sm hover:opacity-90 transition transform active:scale-95 text-sm inline-flex items-center gap-2"
 			>
-				Coba Lagi untuk Perbaiki Skor
+				<RotateCcw class="w-4 h-4" />
+				<span>Coba Lagi untuk Perbaiki Skor</span>
 			</button>
 		</div>
 	{:else}
@@ -223,23 +245,24 @@
 	<!-- Podium Top 3 Display -->
 	{#if data.leaderboard.length > 0}
 		<section class="mt-6">
-			<h3 class="text-center text-sm uppercase tracking-wider font-bold text-slate-400 mb-6">
-				🏆 Podium Juara
-			</h3>
+			<div class="flex items-center justify-center gap-2 text-sm uppercase tracking-wider font-bold text-muted-foreground mb-6">
+				<Trophy class="w-4 h-4 text-primary" />
+				<span>Podium Juara</span>
+			</div>
 
 			<div class="grid grid-cols-3 gap-3 sm:gap-4 items-end max-w-xl mx-auto pt-6 pb-2">
 				<!-- 2nd Place (Silver) -->
 				<div class="flex flex-col items-center">
 					{#if topThree.second}
 						<div class="text-center mb-2">
-							<span class="text-2xl">🥈</span>
-							<p class="text-xs sm:text-sm font-bold text-slate-200 truncate max-w-[90px] sm:max-w-[120px]">{topThree.second.userName}</p>
-							<p class="text-xs font-mono font-bold text-emerald-400">{topThree.second.wpm} WPM</p>
+							<Medal class="w-6 h-6 text-slate-400 mx-auto mb-1" />
+							<p class="text-xs sm:text-sm font-bold text-foreground truncate max-w-[90px] sm:max-w-[120px]">{topThree.second.userName}</p>
+							<p class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">{topThree.second.wpm} WPM</p>
 						</div>
 					{:else}
-						<div class="text-xs text-slate-600 mb-2">—</div>
+						<div class="text-xs text-muted-foreground mb-2">—</div>
 					{/if}
-					<div class="w-full h-24 bg-gradient-to-t from-slate-800 to-slate-700/60 rounded-t-2xl flex items-center justify-center border-t-2 border-slate-400 text-slate-300 font-extrabold text-xl">
+					<div class="w-full h-24 bg-slate-500/15 border-t-4 border-slate-400 rounded-t-2xl flex items-center justify-center text-slate-600 dark:text-slate-300 font-extrabold text-xl shadow-sm">
 						2
 					</div>
 				</div>
@@ -248,14 +271,14 @@
 				<div class="flex flex-col items-center">
 					{#if topThree.first}
 						<div class="text-center mb-2">
-							<span class="text-3xl">🥇</span>
-							<p class="text-sm sm:text-base font-extrabold text-amber-400 truncate max-w-[100px] sm:max-w-[140px]">{topThree.first.userName}</p>
-							<p class="text-sm font-mono font-extrabold text-emerald-400">{topThree.first.wpm} WPM</p>
+							<Trophy class="w-7 h-7 text-amber-500 mx-auto mb-1" />
+							<p class="text-sm sm:text-base font-extrabold text-primary truncate max-w-[100px] sm:max-w-[140px]">{topThree.first.userName}</p>
+							<p class="text-sm font-mono font-extrabold text-emerald-600 dark:text-emerald-400">{topThree.first.wpm} WPM</p>
 						</div>
 					{:else}
-						<div class="text-xs text-slate-600 mb-2">—</div>
+						<div class="text-xs text-muted-foreground mb-2">—</div>
 					{/if}
-					<div class="w-full h-32 bg-gradient-to-t from-amber-600/30 to-amber-500/20 rounded-t-2xl flex items-center justify-center border-t-2 border-amber-400 text-amber-400 font-extrabold text-3xl shadow-lg shadow-amber-500/10">
+					<div class="w-full h-32 bg-amber-500/20 border-t-4 border-amber-500 rounded-t-2xl flex items-center justify-center text-amber-600 dark:text-amber-400 font-extrabold text-3xl shadow-sm">
 						1
 					</div>
 				</div>
@@ -264,14 +287,14 @@
 				<div class="flex flex-col items-center">
 					{#if topThree.third}
 						<div class="text-center mb-2">
-							<span class="text-2xl">🥉</span>
-							<p class="text-xs sm:text-sm font-bold text-slate-200 truncate max-w-[90px] sm:max-w-[120px]">{topThree.third.userName}</p>
-							<p class="text-xs font-mono font-bold text-emerald-400">{topThree.third.wpm} WPM</p>
+							<Medal class="w-6 h-6 text-amber-700 dark:text-amber-500 mx-auto mb-1" />
+							<p class="text-xs sm:text-sm font-bold text-foreground truncate max-w-[90px] sm:max-w-[120px]">{topThree.third.userName}</p>
+							<p class="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400">{topThree.third.wpm} WPM</p>
 						</div>
 					{:else}
-						<div class="text-xs text-slate-600 mb-2">—</div>
+						<div class="text-xs text-muted-foreground mb-2">—</div>
 					{/if}
-					<div class="w-full h-16 bg-gradient-to-t from-slate-800 to-amber-900/30 rounded-t-2xl flex items-center justify-center border-t-2 border-amber-700 text-amber-600 font-extrabold text-lg">
+					<div class="w-full h-16 bg-amber-700/15 border-t-4 border-amber-700 dark:border-amber-600 rounded-t-2xl flex items-center justify-center text-amber-700 dark:text-amber-500 font-extrabold text-lg shadow-sm">
 						3
 					</div>
 				</div>
@@ -279,16 +302,16 @@
 		</section>
 
 		<!-- Full Leaderboard Table -->
-		<section class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl shadow-xl">
-			<div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
-				<h3 class="text-lg font-bold text-white">Papan Peringkat Kompetisi ({data.leaderboard.length})</h3>
-				<span class="text-xs text-slate-400 font-mono">Disortir berdasarkan WPM & Akurasi</span>
+		<section class="p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm">
+			<div class="flex items-center justify-between pb-4 border-b border-border mb-4">
+				<h3 class="text-lg font-bold text-foreground">Papan Peringkat Kompetisi ({data.leaderboard.length})</h3>
+				<span class="text-xs text-muted-foreground font-mono">Disortir berdasarkan WPM & Akurasi</span>
 			</div>
 
 			<div class="overflow-x-auto">
 				<table class="w-full text-left text-sm">
 					<thead>
-						<tr class="text-xs text-slate-400 uppercase border-b border-slate-800/80 font-mono">
+						<tr class="text-xs text-muted-foreground uppercase border-b border-border font-mono font-semibold">
 							<th class="py-3 px-3">Peringkat</th>
 							<th class="py-3 px-3">Nama Peserta</th>
 							<th class="py-3 px-3 text-right">WPM</th>
@@ -297,38 +320,47 @@
 							<th class="py-3 px-3 text-right">Waktu</th>
 						</tr>
 					</thead>
-					<tbody class="divide-y divide-slate-800/50">
+					<tbody class="divide-y divide-border/60">
 						{#each data.leaderboard as entry, idx (entry.id)}
-							<tr class="hover:bg-slate-800/30 transition {session.name.toLowerCase() === entry.userName.toLowerCase() ? 'bg-amber-500/5 font-semibold' : ''}">
-								<td class="py-3 px-3 font-bold text-base">
+							<tr class="hover:bg-muted/50 transition {session.name.toLowerCase() === entry.userName.toLowerCase() ? 'bg-primary/5 font-semibold' : ''}">
+								<td class="py-3 px-3 font-bold text-sm">
 									{#if idx === 0}
-										🥇 1
+										<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/25">
+											<Medal class="w-3.5 h-3.5" />
+											<span>1</span>
+										</span>
 									{:else if idx === 1}
-										🥈 2
+										<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-slate-500/15 text-slate-600 dark:text-slate-300 border border-slate-500/25">
+											<Medal class="w-3.5 h-3.5" />
+											<span>2</span>
+										</span>
 									{:else if idx === 2}
-										🥉 3
+										<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-amber-700/15 text-amber-700 dark:text-amber-500 border border-amber-700/25">
+											<Medal class="w-3.5 h-3.5" />
+											<span>3</span>
+										</span>
 									{:else}
-										#{idx + 1}
+										<span class="text-muted-foreground font-mono text-xs pl-2">#{idx + 1}</span>
 									{/if}
 								</td>
-								<td class="py-3 px-3 text-slate-200">
+								<td class="py-3 px-3 text-foreground">
 									<div class="flex items-center gap-1.5">
 										<span>{entry.userName}</span>
 										{#if session.name.toLowerCase() === entry.userName.toLowerCase()}
-											<span class="text-[10px] px-1.5 py-0.2 bg-amber-400/20 text-amber-300 rounded font-semibold">Anda</span>
+											<span class="text-[10px] px-1.5 py-0.2 bg-primary/15 text-primary border border-primary/25 rounded font-semibold">Anda</span>
 										{/if}
 									</div>
 								</td>
-								<td class="py-3 px-3 text-right font-mono font-bold text-emerald-400 text-base">
+								<td class="py-3 px-3 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400 text-base">
 									{entry.wpm}
 								</td>
-								<td class="py-3 px-3 text-right font-mono text-cyan-400">
+								<td class="py-3 px-3 text-right font-mono text-sky-600 dark:text-sky-400">
 									{entry.accuracy}%
 								</td>
-								<td class="py-3 px-3 text-right font-mono text-slate-400 text-xs">
-									<span class="text-emerald-400">{entry.correctChars}</span> / <span class="text-rose-400">{entry.incorrectChars}</span>
+								<td class="py-3 px-3 text-right font-mono text-muted-foreground text-xs">
+									<span class="text-emerald-600 dark:text-emerald-400">{entry.correctChars}</span> / <span class="text-rose-600 dark:text-rose-400">{entry.incorrectChars}</span>
 								</td>
-								<td class="py-3 px-3 text-right font-mono text-slate-400 text-xs">
+								<td class="py-3 px-3 text-right font-mono text-muted-foreground text-xs">
 									{entry.timeTaken}s
 								</td>
 							</tr>

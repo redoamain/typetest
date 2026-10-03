@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Language, TestMode } from '$lib/types';
+	import { Languages, Type, FileText, Clock } from '@lucide/svelte';
 
 	interface Props {
 		mode: TestMode;
@@ -23,54 +24,62 @@
 	}
 </script>
 
-<div class="inline-flex flex-wrap items-center gap-2 p-1.5 bg-slate-900/90 border border-slate-800 rounded-2xl shadow-lg backdrop-blur">
+<div class="inline-flex flex-wrap items-center justify-center gap-2 p-1.5 bg-card border border-border rounded-2xl shadow-sm">
 	<!-- Language Selector -->
-	<div class="flex items-center bg-slate-950/60 p-1 rounded-xl border border-slate-800/80">
+	<div class="flex items-center bg-muted/60 p-1 rounded-xl border border-border/60">
+		<div class="flex items-center gap-1 pl-1.5 pr-2 text-muted-foreground">
+			<Languages class="w-3.5 h-3.5" />
+		</div>
 		<button
 			type="button"
 			onclick={() => setLanguage('id')}
-			class="px-3 py-1.5 text-xs font-semibold rounded-lg transition {language === 'id' ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'}"
+			class="px-3 py-1.5 text-xs font-semibold rounded-lg transition {language === 'id' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 		>
-			🇮🇩 ID
+			ID
 		</button>
 		<button
 			type="button"
 			onclick={() => setLanguage('en')}
-			class="px-3 py-1.5 text-xs font-semibold rounded-lg transition {language === 'en' ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'}"
+			class="px-3 py-1.5 text-xs font-semibold rounded-lg transition {language === 'en' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 		>
-			🇬🇧 EN
+			EN
 		</button>
 	</div>
 
-	<div class="w-px h-6 bg-slate-800 hidden sm:block"></div>
+	<div class="w-px h-6 bg-border hidden sm:block"></div>
 
 	<!-- Mode Selector -->
-	<div class="flex items-center bg-slate-950/60 p-1 rounded-xl border border-slate-800/80">
+	<div class="flex items-center bg-muted/60 p-1 rounded-xl border border-border/60">
 		<button
 			type="button"
 			onclick={() => setMode('words')}
-			class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition {mode === 'words' ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'}"
+			class="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition {mode === 'words' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 		>
-			Kata
+			<Type class="w-3.5 h-3.5" />
+			<span>Kata</span>
 		</button>
 		<button
 			type="button"
 			onclick={() => setMode('sentences')}
-			class="px-3.5 py-1.5 text-xs font-semibold rounded-lg transition {mode === 'sentences' ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'}"
+			class="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition {mode === 'sentences' ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 		>
-			Kalimat / Kutipan
+			<FileText class="w-3.5 h-3.5" />
+			<span>Kalimat & Kutipan</span>
 		</button>
 	</div>
 
 	<!-- Duration Selector (Only shown for words mode) -->
 	{#if mode === 'words'}
-		<div class="w-px h-6 bg-slate-800 hidden sm:block"></div>
-		<div class="flex items-center bg-slate-950/60 p-1 rounded-xl border border-slate-800/80">
+		<div class="w-px h-6 bg-border hidden sm:block"></div>
+		<div class="flex items-center bg-muted/60 p-1 rounded-xl border border-border/60">
+			<div class="flex items-center gap-1 pl-1.5 pr-1 text-muted-foreground">
+				<Clock class="w-3.5 h-3.5" />
+			</div>
 			{#each [15, 30, 60] as d}
 				<button
 					type="button"
 					onclick={() => setDuration(d)}
-					class="px-3 py-1.5 text-xs font-mono font-semibold rounded-lg transition {duration === d ? 'bg-amber-500 text-slate-950 shadow-sm' : 'text-slate-400 hover:text-white'}"
+					class="px-2.5 py-1.5 text-xs font-mono font-semibold rounded-lg transition {duration === d ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
 					{d}s
 				</button>

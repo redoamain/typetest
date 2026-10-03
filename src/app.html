@@ -4,13 +4,23 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>SpeedType — Tes Kecepatan Mengetik & Kompetisi</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+		<script>
+			try {
+				const saved = localStorage.getItem('citilumb-theme');
+				if (saved === 'light' || (!saved && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+					document.documentElement.classList.remove('dark');
+					document.documentElement.classList.add('light');
+				} else {
+					document.documentElement.classList.add('dark');
+				}
+			} catch (e) {}
+		</script>
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover" class="bg-slate-950 text-slate-100 antialiased selection:bg-amber-400/30 selection:text-amber-200 min-h-screen">
+	<body data-sveltekit-preload-data="hover" class="bg-background text-foreground antialiased selection:bg-amber-500/30 selection:text-amber-500 min-h-screen transition-colors duration-200">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
 </html>

@@ -3,6 +3,7 @@
 	import confetti from 'canvas-confetti';
 	import type { TestResult } from '$lib/types';
 	import { calculateNetWpm } from '$lib/engine/metrics';
+	import { RotateCcw, Flame, Zap, Award, CheckCircle2, Sparkles, Check, X, Clock } from '@lucide/svelte';
 
 	interface Props {
 		result: TestResult;
@@ -15,13 +16,22 @@
 		calculateNetWpm(result.correctChars, result.incorrectChars, result.duration)
 	);
 
-	function getBadge(wpm: number): { label: string; color: string } {
-		if (wpm >= 100) return { label: '🔥 Kecepatan Kilat (Godlike)', color: 'text-purple-400 bg-purple-500/10 border-purple-500/30' };
-		if (wpm >= 75) return { label: '⚡ Sangat Cepat (Master)', color: 'text-amber-400 bg-amber-500/10 border-amber-500/30' };
-		if (wpm >= 50) return { label: '🚀 Cepat (Pro)', color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30' };
-		if (wpm >= 30) return { label: '👍 Menengah (Good)', color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30' };
-		return { label: '🌱 Pemula (Keep Practicing)', color: 'text-slate-400 bg-slate-500/10 border-slate-500/30' };
+	type BadgeInfo = {
+		label: string;
+		color: string;
+		icon: typeof Flame;
+	};
+
+	function getBadge(wpm: number): BadgeInfo {
+		if (wpm >= 100) return { label: 'Kecepatan Kilat (Godlike)', color: 'text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/30', icon: Flame };
+		if (wpm >= 75) return { label: 'Sangat Cepat (Master)', color: 'text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/30', icon: Zap };
+		if (wpm >= 50) return { label: 'Cepat (Pro)', color: 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/30', icon: Award };
+		if (wpm >= 30) return { label: 'Menengah (Good)', color: 'text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/30', icon: CheckCircle2 };
+		return { label: 'Pemula (Keep Practicing)', color: 'text-muted-foreground bg-muted border-border', icon: Sparkles };
 	}
+
+	let badge = $derived(getBadge(result.wpm));
+	let BadgeIcon = $derived(badge.icon);
 
 	onMount(() => {
 		if (result.wpm >= 40) {
@@ -34,44 +44,54 @@
 	});
 </script>
 
-<div class="w-full max-w-xl mx-auto p-8 bg-slate-900/90 border border-slate-800 rounded-3xl shadow-2xl backdrop-blur text-center">
+<div class="w-full max-w-xl mx-auto p-8 bg-card text-card-foreground border border-border rounded-3xl shadow-xl text-center">
 	<!-- Badge -->
-	<div class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold border mb-6 {getBadge(result.wpm).color}">
-		{getBadge(result.wpm).label}
+	<div class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold border mb-6 {badge.color}">
+		<BadgeIcon class="w-4 h-4" />
+		<span>{badge.label}</span>
 	</div>
 
 	<!-- Title -->
-	<h2 class="text-xl font-medium text-slate-400 mb-2">Hasil Tes Mengetik:</h2>
-	<h3 class="text-3xl font-extrabold text-white mb-8">{result.name}</h3>
+	<h2 class="text-sm font-medium text-muted-foreground mb-1 uppercase tracking-wider">Hasil Tes Mengetik</h2>
+	<h3 class="text-3xl font-extrabold text-foreground mb-8">{result.name}</h3>
 
 	<!-- Primary Metrics Highlight -->
 	<div class="grid grid-cols-2 gap-4 mb-8">
-		<div class="p-6 bg-slate-950/70 border border-slate-800/80 rounded-2xl flex flex-col items-center justify-center">
-			<span class="text-xs uppercase tracking-wider font-semibold text-slate-400 mb-1">Kecepatan (WPM)</span>
-			<span class="text-5xl font-mono font-extrabold text-amber-400">{result.wpm}</span>
-			<span class="text-xs text-slate-500 mt-1">Kata per menit</span>
+		<div class="p-6 bg-muted/40 border border-border rounded-2xl flex flex-col items-center justify-center">
+			<span class="text-xs uppercase tracking-wider font-semibold text-muted-foreground mb-1">Kecepatan (WPM)</span>
+			<span class="text-5xl font-mono font-extrabold text-primary">{result.wpm}</span>
+			<span class="text-xs text-muted-foreground mt-1">Kata per menit</span>
 		</div>
 
-		<div class="p-6 bg-slate-950/70 border border-slate-800/80 rounded-2xl flex flex-col items-center justify-center">
-			<span class="text-xs uppercase tracking-wider font-semibold text-slate-400 mb-1">Akurasi</span>
-			<span class="text-5xl font-mono font-extrabold text-cyan-400">{result.accuracy}%</span>
-			<span class="text-xs text-slate-500 mt-1">Ketepatan ketik</span>
+		<div class="p-6 bg-muted/40 border border-border rounded-2xl flex flex-col items-center justify-center">
+			<span class="text-xs uppercase tracking-wider font-semibold text-muted-foreground mb-1">Akurasi</span>
+			<span class="text-5xl font-mono font-extrabold text-sky-600 dark:text-sky-400">{result.accuracy}%</span>
+			<span class="text-xs text-muted-foreground mt-1">Ketepatan ketik</span>
 		</div>
 	</div>
 
 	<!-- Secondary Details Breakdown -->
-	<div class="grid grid-cols-3 gap-3 p-4 bg-slate-950/50 border border-slate-800/60 rounded-2xl mb-8 text-sm">
-		<div class="flex flex-col">
-			<span class="text-slate-400 text-xs">Karakter Benar</span>
-			<span class="text-emerald-400 font-mono font-bold text-lg">{result.correctChars}</span>
+	<div class="grid grid-cols-3 gap-3 p-4 bg-muted/30 border border-border rounded-2xl mb-8 text-sm">
+		<div class="flex flex-col items-center">
+			<div class="flex items-center gap-1 text-muted-foreground text-xs mb-1">
+				<Check class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+				<span>Karakter Benar</span>
+			</div>
+			<span class="text-emerald-600 dark:text-emerald-400 font-mono font-bold text-lg">{result.correctChars}</span>
 		</div>
-		<div class="flex flex-col">
-			<span class="text-slate-400 text-xs">Kesalahan</span>
-			<span class="text-rose-400 font-mono font-bold text-lg">{result.incorrectChars}</span>
+		<div class="flex flex-col items-center">
+			<div class="flex items-center gap-1 text-muted-foreground text-xs mb-1">
+				<X class="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
+				<span>Kesalahan</span>
+			</div>
+			<span class="text-rose-600 dark:text-rose-400 font-mono font-bold text-lg">{result.incorrectChars}</span>
 		</div>
-		<div class="flex flex-col">
-			<span class="text-slate-400 text-xs">Waktu</span>
-			<span class="text-slate-200 font-mono font-bold text-lg">{result.duration}s</span>
+		<div class="flex flex-col items-center">
+			<div class="flex items-center gap-1 text-muted-foreground text-xs mb-1">
+				<Clock class="w-3.5 h-3.5 text-muted-foreground" />
+				<span>Waktu</span>
+			</div>
+			<span class="text-foreground font-mono font-bold text-lg">{result.duration}s</span>
 		</div>
 	</div>
 
@@ -80,11 +100,9 @@
 		<button
 			type="button"
 			onclick={onrestart}
-			class="flex items-center gap-2 py-3.5 px-8 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl shadow-lg shadow-amber-500/20 transition transform active:scale-95"
+			class="flex items-center gap-2 py-3.5 px-8 bg-primary text-primary-foreground font-bold rounded-2xl shadow-sm hover:opacity-90 transition transform active:scale-95 text-sm"
 		>
-			<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-			</svg>
+			<RotateCcw class="w-4 h-4" />
 			<span>Ulangi Tes</span>
 		</button>
 	</div>

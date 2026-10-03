@@ -20,9 +20,11 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"dependencies": {
+		"@lucide/svelte": "^1.50.0",
 		"better-sqlite3": "^13.0.2",
 		"canvas-confetti": "^1.9.4",
-		"drizzle-orm": "^0.45.2"
+		"drizzle-orm": "^0.45.2",
+		"lucide-svelte": "^1.0.1"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",

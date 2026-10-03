@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { calculateWpm, calculateAccuracy, calculateNetWpm } from '$lib/engine/metrics';
+	import { calculateWpm, calculateAccuracy } from '$lib/engine/metrics';
 	import type { TestStatus } from '$lib/types';
+	import { RotateCcw, Clock, Zap, Target } from '@lucide/svelte';
 
 	interface FinishResult {
 		wpm: number;
@@ -41,6 +42,7 @@
 			timeLeft = duration > 0 ? duration : 0;
 		}
 	});
+
 	let timerInterval: ReturnType<typeof setInterval> | null = null;
 	let inputEl: HTMLInputElement | null = $state(null);
 	let textContainerEl: HTMLDivElement | null = $state(null);
@@ -111,14 +113,12 @@
 		const target = e.target as HTMLInputElement;
 		typed = target.value;
 
-		// If typed reached or exceeded target text length in completion mode or normal mode
 		if (typed.length >= text.length) {
 			finish();
 		}
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
-		// Restart on Tab or Escape
 		if (e.key === 'Tab' || e.key === 'Escape') {
 			e.preventDefault();
 			reset();
@@ -145,7 +145,6 @@
 		inputEl?.focus();
 	}
 
-	// Auto-scroll so cursor stays visible
 	$effect(() => {
 		if (cursorEl && textContainerEl) {
 			const cursorOffset = cursorEl.offsetTop;
@@ -171,70 +170,75 @@
 </script>
 
 <div class="relative w-full max-w-4xl mx-auto flex flex-col gap-6">
-	<!-- Top Live Stats Bar -->
-	<div class="flex items-center justify-between px-6 py-4 bg-slate-900/80 backdrop-blur border border-slate-800/80 rounded-2xl shadow-xl">
-		<div class="flex items-center gap-8">
+	<!-- Top Live Stats Bar (Shadcn UI style) -->
+	<div class="flex items-center justify-between px-6 py-4 bg-card text-card-foreground border border-border rounded-2xl shadow-sm">
+		<div class="flex items-center gap-6 sm:gap-8">
 			<!-- Timer / Countdown -->
 			<div class="flex flex-col">
-				<span class="text-xs uppercase tracking-wider text-slate-400 font-medium">
-					{duration > 0 ? 'Waktu Tersisa' : 'Waktu Berjalan'}
-				</span>
-				<div class="flex items-baseline gap-1">
-					<span class="text-3xl font-mono font-bold text-amber-400">
+				<div class="flex items-center gap-1.5 text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+					<Clock class="w-3.5 h-3.5 text-primary" />
+					<span>{duration > 0 ? 'Waktu' : 'Stopwatch'}</span>
+				</div>
+				<div class="flex items-baseline gap-1 mt-0.5">
+					<span class="text-3xl font-mono font-bold text-primary">
 						{duration > 0 ? timeLeft : elapsedSeconds}
 					</span>
-					<span class="text-sm text-slate-400">detik</span>
+					<span class="text-xs text-muted-foreground">detik</span>
 				</div>
 			</div>
 
 			<!-- Live WPM -->
 			<div class="flex flex-col">
-				<span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Kecepatan</span>
-				<div class="flex items-baseline gap-1">
-					<span class="text-3xl font-mono font-bold text-emerald-400">
+				<div class="flex items-center gap-1.5 text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+					<Zap class="w-3.5 h-3.5 text-emerald-500" />
+					<span>Kecepatan</span>
+				</div>
+				<div class="flex items-baseline gap-1 mt-0.5">
+					<span class="text-3xl font-mono font-bold text-emerald-500">
 						{currentWpm}
 					</span>
-					<span class="text-sm text-slate-400">WPM</span>
+					<span class="text-xs text-muted-foreground">WPM</span>
 				</div>
 			</div>
 
 			<!-- Live Accuracy -->
 			<div class="flex flex-col">
-				<span class="text-xs uppercase tracking-wider text-slate-400 font-medium">Akurasi</span>
-				<div class="flex items-baseline gap-1">
-					<span class="text-3xl font-mono font-bold text-cyan-400">
+				<div class="flex items-center gap-1.5 text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+					<Target class="w-3.5 h-3.5 text-sky-500" />
+					<span>Akurasi</span>
+				</div>
+				<div class="flex items-baseline gap-1 mt-0.5">
+					<span class="text-3xl font-mono font-bold text-sky-500">
 						{currentAccuracy}
 					</span>
-					<span class="text-sm text-slate-400">%</span>
+					<span class="text-xs text-muted-foreground">%</span>
 				</div>
 			</div>
 		</div>
 
-		<!-- Status & Restart Button -->
+		<!-- Status & Reset Button -->
 		<div class="flex items-center gap-3">
 			{#if status === 'idle'}
-				<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-300 border border-amber-500/20 animate-pulse">
+				<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
 					Ketik untuk mulai
 				</span>
 			{:else if status === 'running'}
-				<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+				<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
 					Mengetik...
 				</span>
 			{:else}
-				<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
-					Selesai!
+				<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
+					Selesai
 				</span>
 			{/if}
 
 			<button
 				type="button"
 				onclick={reset}
-				class="flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white rounded-xl transition shadow-sm border border-slate-700/60 focus:outline-none focus:ring-2 focus:ring-amber-400/40"
+				class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-secondary-foreground bg-secondary hover:bg-secondary/80 rounded-xl border border-border transition shadow-sm"
 				title="Ulangi Tes (Tab / Esc)"
 			>
-				<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-				</svg>
+				<RotateCcw class="w-3.5 h-3.5" />
 				<span>Reset</span>
 			</button>
 		</div>
@@ -246,31 +250,31 @@
 	<div
 		bind:this={textContainerEl}
 		onclick={focusInput}
-		class="relative p-8 min-h-[220px] max-h-[340px] overflow-y-auto bg-slate-900/60 hover:bg-slate-900/80 border-2 border-slate-800 hover:border-slate-700 focus-within:border-amber-500/70 rounded-3xl cursor-text transition shadow-2xl backdrop-blur-sm select-none"
+		class="relative p-8 min-h-[220px] max-h-[340px] overflow-y-auto bg-card text-card-foreground hover:border-primary/40 focus-within:border-primary border-2 border-border rounded-2xl cursor-text transition shadow-sm select-none"
 	>
 		<div class="font-mono text-2xl leading-relaxed tracking-wide select-none break-words">
 			{#each text as char, i}
 				{#if i < typed.length}
 					{#if typed[i] === char}
-						<span class="text-emerald-400 transition-colors duration-75">{char}</span>
+						<span class="text-emerald-600 dark:text-emerald-400 font-medium transition-colors duration-75">{char}</span>
 					{:else}
-						<span class="text-rose-400 bg-rose-950/60 rounded px-0.5 border-b-2 border-rose-500">{char}</span>
+						<span class="text-rose-600 dark:text-rose-400 bg-rose-500/15 rounded px-0.5 border-b-2 border-rose-500">{char}</span>
 					{/if}
 				{:else if i === typed.length}
 					<!-- Active Cursor Indicator -->
 					<span
 						bind:this={cursorEl}
-						class="relative inline-block text-slate-100 bg-amber-400/25 border-l-2 border-amber-400 animate-cursor font-semibold"
+						class="relative inline-block text-foreground bg-primary/25 border-l-2 border-primary animate-cursor font-semibold"
 					>
 						{char}
 					</span>
 				{:else}
-					<span class="text-slate-500 opacity-60">{char}</span>
+					<span class="text-muted-foreground/60">{char}</span>
 				{/if}
 			{/each}
 		</div>
 
-		<!-- Hidden Input that captures all keystrokes and supports mobile keyboards -->
+		<!-- Hidden Input -->
 		<input
 			bind:this={inputEl}
 			type="text"
@@ -285,17 +289,17 @@
 		/>
 	</div>
 
-	<!-- Bottom Hint -->
-	<div class="flex items-center justify-between px-2 text-xs text-slate-400 font-mono">
+	<!-- Bottom Hint & Counters -->
+	<div class="flex items-center justify-between px-2 text-xs text-muted-foreground font-mono">
 		<div class="flex items-center gap-4">
-			<span>Karakter benar: <strong class="text-emerald-400">{correctChars}</strong></span>
-			<span>Kesalahan: <strong class="text-rose-400">{incorrectChars}</strong></span>
-			<span>Total target: <strong>{text.length}</strong></span>
+			<span>Karakter benar: <strong class="text-emerald-600 dark:text-emerald-400 font-semibold">{correctChars}</strong></span>
+			<span>Kesalahan: <strong class="text-rose-600 dark:text-rose-400 font-semibold">{incorrectChars}</strong></span>
+			<span>Total target: <strong class="text-foreground">{text.length}</strong></span>
 		</div>
-		<div class="flex items-center gap-2 text-slate-400">
-			<kbd class="px-2 py-0.5 bg-slate-800 text-slate-300 border border-slate-700 rounded text-[11px]">Tab</kbd>
+		<div class="flex items-center gap-1.5">
+			<kbd class="px-1.5 py-0.5 bg-muted text-foreground border border-border rounded text-[11px] font-semibold">Tab</kbd>
 			<span>/</span>
-			<kbd class="px-2 py-0.5 bg-slate-800 text-slate-300 border border-slate-700 rounded text-[11px]">Esc</kbd>
+			<kbd class="px-1.5 py-0.5 bg-muted text-foreground border border-border rounded text-[11px] font-semibold">Esc</kbd>
 			<span>untuk restart</span>
 		</div>
 	</div>

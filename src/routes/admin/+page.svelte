@@ -1,6 +1,25 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import type { Language, SentenceItem, WordItem, UserRecord, Competition } from '$lib/types';
+	import {
+		Lock,
+		Zap,
+		Building2,
+		BookOpen,
+		FileText,
+		Users,
+		Trophy,
+		Plus,
+		Boxes,
+		Edit3,
+		Trash2,
+		RotateCcw,
+		LogOut,
+		Check,
+		X,
+		ExternalLink,
+		Languages
+	} from '@lucide/svelte';
 
 	let { data } = $props();
 
@@ -351,36 +370,36 @@
 <div class="max-w-6xl mx-auto flex flex-col gap-8">
 	{#if !data.isAuthenticated}
 		<!-- Login Card -->
-		<div class="max-w-md mx-auto w-full my-12 p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl text-center">
-			<div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-2xl">
-				🔒
+		<div class="max-w-md mx-auto w-full my-12 p-8 bg-card text-card-foreground border border-border rounded-3xl shadow-xl text-center">
+			<div class="w-14 h-14 mx-auto mb-4 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+				<Lock class="w-7 h-7" />
 			</div>
-			<h2 class="text-2xl font-bold text-white mb-2">Admin Panel</h2>
-			<p class="text-xs text-slate-400 mb-6">
+			<h2 class="text-2xl font-bold text-foreground mb-2">Admin Panel</h2>
+			<p class="text-xs text-muted-foreground mb-6">
 				Masuk untuk mengatur kamus kata, kalimat, quotes, daftar pengguna, dan event kompetisi.
 			</p>
 
 			<form onsubmit={handleLogin} class="flex flex-col gap-4 text-left">
 				<div>
-					<label for="admin-pass" class="block text-xs font-semibold text-slate-300 uppercase mb-2">Password Admin</label>
+					<label for="admin-pass" class="block text-xs font-semibold text-muted-foreground uppercase mb-2">Password Admin</label>
 					<input
 						id="admin-pass"
 						type="password"
 						bind:value={passwordInput}
 						placeholder="Masukkan password admin..."
-						class="w-full px-4 py-3 bg-slate-950 border border-slate-700 focus:border-amber-400 focus:ring-2 focus:ring-amber-400/20 text-white rounded-2xl text-sm outline-none transition"
+						class="w-full px-4 py-3 bg-background border border-input focus:border-primary focus:ring-2 focus:ring-primary/20 text-foreground rounded-2xl text-sm outline-none transition"
 					/>
-					<p class="text-[11px] text-slate-400 mt-1.5">Default password: <code class="text-amber-400 bg-slate-800 px-1 py-0.5 rounded">admin123</code></p>
+					<p class="text-[11px] text-muted-foreground mt-1.5">Default password: <code class="text-primary bg-muted px-1.5 py-0.5 rounded font-mono">admin123</code></p>
 				</div>
 
 				{#if loginError}
-					<p class="text-xs text-rose-400 font-semibold">{loginError}</p>
+					<p class="text-xs text-destructive font-semibold">{loginError}</p>
 				{/if}
 
 				<button
 					type="submit"
 					disabled={isLoggingIn}
-					class="w-full py-3.5 px-6 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl shadow-lg shadow-amber-500/20 transition transform active:scale-95 disabled:opacity-50"
+					class="w-full py-3.5 px-6 bg-primary text-primary-foreground font-bold rounded-2xl shadow-sm hover:opacity-90 transition transform active:scale-95 disabled:opacity-50"
 				>
 					{isLoggingIn ? 'Memverifikasi...' : 'Masuk Panel Admin'}
 				</button>
@@ -390,82 +409,89 @@
 		<!-- Authenticated Admin Dashboard -->
 		<div class="flex flex-col gap-6">
 			<!-- Header & Logout -->
-			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl">
+			<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm">
 				<div>
-					<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-xs font-bold mb-2">
-						<span>⚡ Admin Mode</span>
+					<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold mb-2">
+						<Zap class="w-3.5 h-3.5" />
+						<span>Admin Mode</span>
 					</div>
-					<h1 class="text-2xl sm:text-3xl font-bold text-white">Pusat Kendali Admin</h1>
-					<p class="text-xs text-slate-400">Kelola kata, kutipan/kalimat, pengguna, dan kompetisi secara langsung.</p>
+					<h1 class="text-2xl sm:text-3xl font-bold text-foreground">Pusat Kendali Admin</h1>
+					<p class="text-xs text-muted-foreground">Kelola kata, kutipan/kalimat, pengguna, dan kompetisi secara langsung.</p>
 				</div>
 
 				<div class="flex items-center gap-3">
 					<button
 						type="button"
 						onclick={handleLogout}
-						class="px-4 py-2 text-xs font-semibold text-rose-400 hover:text-white bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl transition"
+						class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-destructive hover:bg-destructive/10 border border-destructive/20 rounded-xl transition"
 					>
-						Keluar (Logout)
+						<LogOut class="w-3.5 h-3.5" />
+						<span>Keluar (Logout)</span>
 					</button>
 				</div>
 			</div>
 
 			<!-- Quick Stats Row -->
 			<div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-				<div class="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl">
-					<span class="text-xs text-slate-400">Total Kata Tersimpan</span>
-					<p class="text-2xl font-mono font-bold text-amber-400 mt-1">{data.words.length}</p>
+				<div class="p-4 bg-card text-card-foreground border border-border rounded-2xl shadow-sm">
+					<span class="text-xs text-muted-foreground">Total Kata Tersimpan</span>
+					<p class="text-2xl font-mono font-bold text-primary mt-1">{data.words.length}</p>
 				</div>
-				<div class="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl">
-					<span class="text-xs text-slate-400">Total Kalimat / Quotes</span>
-					<p class="text-2xl font-mono font-bold text-cyan-400 mt-1">{data.sentences.length}</p>
+				<div class="p-4 bg-card text-card-foreground border border-border rounded-2xl shadow-sm">
+					<span class="text-xs text-muted-foreground">Total Kalimat / Quotes</span>
+					<p class="text-2xl font-mono font-bold text-sky-600 dark:text-sky-400 mt-1">{data.sentences.length}</p>
 				</div>
-				<div class="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl">
-					<span class="text-xs text-slate-400">Total Pengetik Terdaftar</span>
-					<p class="text-2xl font-mono font-bold text-emerald-400 mt-1">{data.users.length}</p>
+				<div class="p-4 bg-card text-card-foreground border border-border rounded-2xl shadow-sm">
+					<span class="text-xs text-muted-foreground">Total Pengetik Terdaftar</span>
+					<p class="text-2xl font-mono font-bold text-emerald-600 dark:text-emerald-400 mt-1">{data.users.length}</p>
 				</div>
-				<div class="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl">
-					<span class="text-xs text-slate-400">Total Kompetisi</span>
-					<p class="text-2xl font-mono font-bold text-purple-400 mt-1">{data.competitions.length}</p>
+				<div class="p-4 bg-card text-card-foreground border border-border rounded-2xl shadow-sm">
+					<span class="text-xs text-muted-foreground">Total Kompetisi</span>
+					<p class="text-2xl font-mono font-bold text-purple-600 dark:text-purple-400 mt-1">{data.competitions.length}</p>
 				</div>
 			</div>
 
 			<!-- Navigation Tabs -->
-			<div class="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto">
+			<div class="flex items-center gap-2 border-b border-border pb-3 overflow-x-auto">
 				<button
 					type="button"
 					onclick={() => (activeTab = 'branding')}
-					class="px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap {activeTab === 'branding' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+					class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition whitespace-nowrap {activeTab === 'branding' ? 'bg-primary text-primary-foreground shadow-sm font-bold' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
-					🏢 Branding & Logo Citilumb
+					<Building2 class="w-4 h-4" />
+					<span>Branding & Logo Citilumb</span>
 				</button>
 				<button
 					type="button"
 					onclick={() => (activeTab = 'words')}
-					class="px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap {activeTab === 'words' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+					class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition whitespace-nowrap {activeTab === 'words' ? 'bg-primary text-primary-foreground shadow-sm font-bold' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
-					🔤 Kelola Kata ({data.words.length})
+					<BookOpen class="w-4 h-4" />
+					<span>Kelola Kata ({data.words.length})</span>
 				</button>
 				<button
 					type="button"
 					onclick={() => (activeTab = 'sentences')}
-					class="px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap {activeTab === 'sentences' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+					class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition whitespace-nowrap {activeTab === 'sentences' ? 'bg-primary text-primary-foreground shadow-sm font-bold' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
-					📜 Kelola Kalimat ({data.sentences.length})
+					<FileText class="w-4 h-4" />
+					<span>Kelola Kalimat ({data.sentences.length})</span>
 				</button>
 				<button
 					type="button"
 					onclick={() => (activeTab = 'users')}
-					class="px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap {activeTab === 'users' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+					class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition whitespace-nowrap {activeTab === 'users' ? 'bg-primary text-primary-foreground shadow-sm font-bold' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
-					👥 Pengguna ({data.users.length})
+					<Users class="w-4 h-4" />
+					<span>Pengguna ({data.users.length})</span>
 				</button>
 				<button
 					type="button"
 					onclick={() => (activeTab = 'competitions')}
-					class="px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap {activeTab === 'competitions' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+					class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition whitespace-nowrap {activeTab === 'competitions' ? 'bg-primary text-primary-foreground shadow-sm font-bold' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
-					🏆 Kompetisi ({data.competitions.length})
+					<Trophy class="w-4 h-4" />
+					<span>Kompetisi ({data.competitions.length})</span>
 				</button>
 			</div>
 
@@ -473,21 +499,26 @@
 			{#if activeTab === 'branding'}
 				<div class="flex flex-col gap-6">
 					{#if settingsMessage}
-						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold rounded-2xl text-center">
+						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-semibold rounded-2xl text-center">
 							{settingsMessage}
 						</div>
 					{/if}
 
-					<div class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl shadow-xl">
-						<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 mb-6 gap-2">
-							<div>
-								<h3 class="text-lg font-bold text-white">🏢 Pengaturan Identitas & Logo Citilumb</h3>
-								<p class="text-xs text-slate-400">Atur nama aplikasi, nama perusahaan, slogan, dan logo yang tampil di seluruh sistem.</p>
+					<div class="p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-border mb-6 gap-2">
+							<div class="flex items-center gap-3">
+								<div class="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+									<Building2 class="w-5 h-5" />
+								</div>
+								<div>
+									<h3 class="text-lg font-bold text-foreground">Pengaturan Identitas & Logo Citilumb</h3>
+									<p class="text-xs text-muted-foreground">Atur nama aplikasi, nama perusahaan, slogan, dan logo yang tampil di seluruh sistem.</p>
+								</div>
 							</div>
 							<button
 								type="button"
 								onclick={resetDefaultBranding}
-								class="px-3.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition self-start sm:self-auto"
+								class="px-3.5 py-1.5 text-xs font-semibold bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl border border-border transition self-start sm:self-auto"
 							>
 								Reset ke Default Citilumb
 							</button>
@@ -496,24 +527,24 @@
 						<form onsubmit={saveSettingsSubmit} class="flex flex-col gap-5">
 							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 								<div>
-									<label for="cfg-app-name" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Nama Aplikasi</label>
+									<label for="cfg-app-name" class="block text-xs font-semibold text-muted-foreground uppercase mb-1.5">Nama Aplikasi</label>
 									<input
 										id="cfg-app-name"
 										type="text"
 										bind:value={cfgAppName}
 										placeholder="Misal: Citilumb SpeedType"
-										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+										class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
 										required
 									/>
 								</div>
 								<div>
-									<label for="cfg-comp-name" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Nama Perusahaan</label>
+									<label for="cfg-comp-name" class="block text-xs font-semibold text-muted-foreground uppercase mb-1.5">Nama Perusahaan</label>
 									<input
 										id="cfg-comp-name"
 										type="text"
 										bind:value={cfgCompanyName}
 										placeholder="Misal: Citilumb"
-										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+										class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
 										required
 									/>
 								</div>
@@ -521,45 +552,45 @@
 
 							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
 								<div>
-									<label for="cfg-logo-url" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">URL / Path Logo</label>
+									<label for="cfg-logo-url" class="block text-xs font-semibold text-muted-foreground uppercase mb-1.5">URL / Path Logo</label>
 									<input
 										id="cfg-logo-url"
 										type="text"
 										bind:value={cfgLogoUrl}
 										placeholder="Misal: /logo.svg atau https://..."
-										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 font-mono"
+										class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 font-mono"
 										required
 									/>
-									<span class="text-[11px] text-slate-500 mt-1 block">Default: <code class="text-amber-400">/logo.svg</code> (tersedia logo Citilumb bawaan)</span>
+									<span class="text-[11px] text-muted-foreground mt-1 block">Default: <code class="text-primary bg-muted px-1 py-0.5 rounded">/logo.svg</code> (tersedia logo Citilumb bawaan)</span>
 								</div>
 								<div>
-									<label for="cfg-tagline" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Slogan / Tagline</label>
+									<label for="cfg-tagline" class="block text-xs font-semibold text-muted-foreground uppercase mb-1.5">Slogan / Tagline</label>
 									<input
 										id="cfg-tagline"
 										type="text"
 										bind:value={cfgTagline}
 										placeholder="Misal: Platform Resmi Tes Kecepatan Mengetik & Turnamen Citilumb"
-										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+										class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
 									/>
 								</div>
 							</div>
 
 							<div>
-								<label for="cfg-desc" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Deskripsi Perusahaan / Pengantar</label>
+								<label for="cfg-desc" class="block text-xs font-semibold text-muted-foreground uppercase mb-1.5">Deskripsi Perusahaan / Pengantar</label>
 								<textarea
 									id="cfg-desc"
 									bind:value={cfgDescription}
 									rows="2"
 									placeholder="Deskripsi singkat mengenai tes mengetik untuk karyawan Citilumb..."
-									class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 resize-none"
+									class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none"
 								></textarea>
 							</div>
 
 							<!-- Live Preview Card -->
-							<div class="p-5 bg-slate-950 border border-slate-800 rounded-2xl">
-								<span class="text-xs uppercase tracking-wider text-slate-400 font-bold block mb-3">Live Preview Tampilan Navbar & Logo</span>
-								<div class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-800 rounded-xl max-w-md">
-									<div class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center p-1 overflow-hidden shrink-0">
+							<div class="p-5 bg-muted/30 border border-border rounded-2xl">
+								<span class="text-xs uppercase tracking-wider text-muted-foreground font-bold block mb-3">Live Preview Tampilan Navbar & Logo</span>
+								<div class="flex items-center gap-3 p-3 bg-card border border-border rounded-xl max-w-md shadow-sm">
+									<div class="w-10 h-10 rounded-xl bg-muted border border-border flex items-center justify-center p-1.5 overflow-hidden shrink-0">
 										<img
 											src={cfgLogoUrl || '/logo.svg'}
 											alt={cfgCompanyName}
@@ -567,8 +598,8 @@
 										/>
 									</div>
 									<div class="flex flex-col min-w-0">
-										<span class="text-white font-bold text-sm truncate">{cfgAppName || 'Nama Aplikasi'}</span>
-										<span class="text-[10px] uppercase tracking-wider text-amber-400 font-bold truncate">{cfgCompanyName || 'Nama Perusahaan'}</span>
+										<span class="text-foreground font-bold text-sm truncate">{cfgAppName || 'Nama Aplikasi'}</span>
+										<span class="text-[10px] uppercase tracking-wider text-primary font-bold truncate">{cfgCompanyName || 'Nama Perusahaan'}</span>
 									</div>
 								</div>
 							</div>
@@ -577,7 +608,7 @@
 								<button
 									type="submit"
 									disabled={isSavingSettings}
-									class="py-3 px-8 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl shadow-lg shadow-amber-500/20 transition transform active:scale-95 text-sm disabled:opacity-50"
+									class="py-3 px-8 bg-primary text-primary-foreground font-bold rounded-2xl shadow-sm hover:opacity-90 transition transform active:scale-95 text-sm disabled:opacity-50"
 								>
 									{isSavingSettings ? 'Menyimpan...' : 'Simpan Pengaturan Citilumb'}
 								</button>
@@ -591,26 +622,29 @@
 			{#if activeTab === 'words'}
 				<div class="flex flex-col gap-6">
 					{#if wordActionMessage}
-						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold rounded-2xl text-center">
+						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-semibold rounded-2xl text-center">
 							{wordActionMessage}
 						</div>
 					{/if}
 
 					<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 						<!-- Add Single Word -->
-						<div class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl">
-							<h3 class="text-base font-bold text-white mb-3">➕ Tambah Satu Kata</h3>
+						<div class="p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm">
+							<div class="flex items-center gap-2 mb-3">
+								<Plus class="w-4 h-4 text-primary" />
+								<h3 class="text-base font-bold text-foreground">Tambah Satu Kata</h3>
+							</div>
 							<form onsubmit={addSingleWordSubmit} class="flex flex-col gap-3">
 								<div class="flex gap-2">
 									<input
 										type="text"
 										bind:value={newSingleWord}
 										placeholder="Misal: kecepatan"
-										class="flex-1 px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+										class="flex-1 px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
 									/>
 									<select
 										bind:value={newSingleLang}
-										class="px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 font-semibold"
+										class="px-3 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary font-semibold"
 									>
 										<option value="id">ID</option>
 										<option value="en">EN</option>
@@ -618,7 +652,7 @@
 								</div>
 								<button
 									type="submit"
-									class="py-2.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition"
+									class="py-2.5 px-4 bg-primary text-primary-foreground font-bold rounded-xl text-sm transition hover:opacity-90 shadow-sm"
 								>
 									Tambah Kata
 								</button>
@@ -626,26 +660,29 @@
 						</div>
 
 						<!-- Add Words Batch -->
-						<div class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl">
-							<h3 class="text-base font-bold text-white mb-3">📦 Tambah Kata Massal (Batch)</h3>
+						<div class="p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm">
+							<div class="flex items-center gap-2 mb-3">
+								<Boxes class="w-4 h-4 text-primary" />
+								<h3 class="text-base font-bold text-foreground">Tambah Kata Massal (Batch)</h3>
+							</div>
 							<form onsubmit={addBatchWordsSubmit} class="flex flex-col gap-3">
 								<textarea
 									bind:value={batchWordsText}
 									rows="2"
 									placeholder="Paste kata-kata di sini dipisahkan spasi atau koma..."
-									class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 resize-none font-mono"
+									class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none font-mono"
 								></textarea>
 								<div class="flex items-center justify-between gap-3">
 									<select
 										bind:value={batchWordsLang}
-										class="px-3 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 font-semibold"
+										class="px-3 py-2 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary font-semibold"
 									>
 										<option value="id">Bahasa Indonesia</option>
 										<option value="en">English</option>
 									</select>
 									<button
 										type="submit"
-										class="py-2 px-5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition"
+										class="py-2 px-5 bg-primary text-primary-foreground font-bold rounded-xl text-sm transition hover:opacity-90 shadow-sm"
 									>
 										Import Massal
 									</button>
@@ -655,29 +692,31 @@
 					</div>
 
 					<!-- Search, Filter & List -->
-					<div class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl flex flex-col gap-4">
+					<div class="p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm flex flex-col gap-4">
 						<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
 							<div class="flex items-center gap-2">
 								<button
 									type="button"
 									onclick={() => (wordLangFilter = 'all')}
-									class="px-3 py-1.5 text-xs font-semibold rounded-lg {wordLangFilter === 'all' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300'}"
+									class="px-3 py-1.5 text-xs font-semibold rounded-lg transition {wordLangFilter === 'all' ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}"
 								>
 									Semua
 								</button>
 								<button
 									type="button"
 									onclick={() => (wordLangFilter = 'id')}
-									class="px-3 py-1.5 text-xs font-semibold rounded-lg {wordLangFilter === 'id' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300'}"
+									class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg transition {wordLangFilter === 'id' ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}"
 								>
-									🇮🇩 Indonesia
+									<Languages class="w-3 h-3" />
+									<span>Indonesia</span>
 								</button>
 								<button
 									type="button"
 									onclick={() => (wordLangFilter = 'en')}
-									class="px-3 py-1.5 text-xs font-semibold rounded-lg {wordLangFilter === 'en' ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300'}"
+									class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded-lg transition {wordLangFilter === 'en' ? 'bg-primary text-primary-foreground shadow-sm' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'}"
 								>
-									🇬🇧 English
+									<Languages class="w-3 h-3" />
+									<span>English</span>
 								</button>
 							</div>
 
@@ -686,36 +725,37 @@
 									type="text"
 									bind:value={wordSearch}
 									placeholder="Cari kata..."
-									class="px-3.5 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-sm text-white outline-none focus:border-amber-400"
+									class="px-3.5 py-1.5 bg-background border border-input rounded-xl text-sm text-foreground outline-none focus:border-primary"
 								/>
 								<button
 									type="button"
 									onclick={resetWords}
-									class="px-3 py-1.5 text-xs font-semibold text-rose-300 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-xl transition whitespace-nowrap"
+									class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-destructive hover:bg-destructive/10 border border-destructive/20 rounded-xl transition whitespace-nowrap"
 									title="Kembalikan semua kata ke kamus awal"
 								>
-									Reset Default
+									<RotateCcw class="w-3 h-3" />
+									<span>Reset Default</span>
 								</button>
 							</div>
 						</div>
 
 						<!-- Words Cloud / List -->
-						<div class="flex flex-wrap gap-2 max-h-[420px] overflow-y-auto p-4 bg-slate-950/70 border border-slate-800/80 rounded-2xl">
+						<div class="flex flex-wrap gap-2 max-h-[420px] overflow-y-auto p-4 bg-muted/30 border border-border rounded-2xl">
 							{#each filteredWords as w (w.id)}
-								<div class="group inline-flex items-center gap-1.5 px-3 py-1 bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl text-sm font-mono text-slate-200 transition">
-									<span class="text-[10px] text-amber-400 font-bold uppercase">{w.language}</span>
+								<div class="group inline-flex items-center gap-1.5 px-3 py-1 bg-card border border-border hover:border-primary/40 rounded-xl text-sm font-mono text-foreground transition shadow-xs">
+									<span class="text-[10px] text-primary font-bold uppercase">{w.language}</span>
 									<span>{w.word}</span>
 									<button
 										type="button"
 										onclick={() => removeWord(w.id)}
-										class="opacity-0 group-hover:opacity-100 text-rose-400 hover:text-rose-300 ml-1 text-xs transition"
+										class="opacity-0 group-hover:opacity-100 text-destructive hover:text-destructive/80 ml-1 transition p-0.5"
 										title="Hapus kata"
 									>
-										✕
+										<X class="w-3 h-3" />
 									</button>
 								</div>
 							{:else}
-								<div class="w-full py-8 text-center text-slate-500 text-sm">
+								<div class="w-full py-8 text-center text-muted-foreground text-sm">
 									Tidak ada kata yang sesuai dengan pencarian atau filter.
 								</div>
 							{/each}
@@ -728,48 +768,54 @@
 			{#if activeTab === 'sentences'}
 				<div class="flex flex-col gap-6">
 					{#if sentenceActionMessage}
-						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold rounded-2xl text-center">
+						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-semibold rounded-2xl text-center">
 							{sentenceActionMessage}
 						</div>
 					{/if}
 
 					<!-- Add / Edit Sentence Form -->
-					<div class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl">
-						<h3 class="text-base font-bold text-white mb-3">
-							{editingSentenceId ? '✏️ Edit Kalimat / Kutipan' : '➕ Tambah Kalimat / Kutipan Baru'}
-						</h3>
+					<div class="p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm">
+						<div class="flex items-center gap-2 mb-3">
+							{#if editingSentenceId}
+								<Edit3 class="w-4 h-4 text-primary" />
+								<h3 class="text-base font-bold text-foreground">Edit Kalimat / Kutipan</h3>
+							{:else}
+								<Plus class="w-4 h-4 text-primary" />
+								<h3 class="text-base font-bold text-foreground">Tambah Kalimat / Kutipan Baru</h3>
+							{/if}
+						</div>
 
 						<form onsubmit={saveSentenceSubmit} class="flex flex-col gap-4">
 							<div>
-								<label for="sentence-text" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Teks Kalimat</label>
+								<label for="sentence-text" class="block text-xs font-semibold text-muted-foreground uppercase mb-1">Teks Kalimat</label>
 								<textarea
 									id="sentence-text"
 									bind:value={newSentenceText}
 									rows="3"
 									placeholder="Tulis kalimat inspiratif atau teks latihan..."
-									class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 resize-none font-mono"
+									class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none font-mono"
 									required
 								></textarea>
 							</div>
 
 							<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
 								<div>
-									<label for="sentence-author" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Penulis / Tokoh (Opsional)</label>
+									<label for="sentence-author" class="block text-xs font-semibold text-muted-foreground uppercase mb-1">Penulis / Tokoh (Opsional)</label>
 									<input
 										id="sentence-author"
 										type="text"
 										bind:value={newSentenceAuthor}
 										placeholder="Misal: B.J. Habibie"
-										class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+										class="w-full px-4 py-2 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
 									/>
 								</div>
 
 								<div>
-									<label for="sentence-lang" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Bahasa</label>
+									<label for="sentence-lang" class="block text-xs font-semibold text-muted-foreground uppercase mb-1">Bahasa</label>
 									<select
 										id="sentence-lang"
 										bind:value={newSentenceLang}
-										class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 font-semibold"
+										class="w-full px-4 py-2 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary font-semibold"
 									>
 										<option value="id">Bahasa Indonesia</option>
 										<option value="en">English</option>
@@ -777,11 +823,11 @@
 								</div>
 
 								<div>
-									<label for="sentence-diff" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Tingkat Kesulitan</label>
+									<label for="sentence-diff" class="block text-xs font-semibold text-muted-foreground uppercase mb-1">Tingkat Kesulitan</label>
 									<select
 										id="sentence-diff"
 										bind:value={newSentenceDiff}
-										class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 font-semibold"
+										class="w-full px-4 py-2 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary font-semibold"
 									>
 										<option value="easy">Mudah (Easy)</option>
 										<option value="medium">Menengah (Medium)</option>
@@ -795,14 +841,14 @@
 									<button
 										type="button"
 										onclick={cancelEditSentence}
-										class="py-2.5 px-5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-sm transition"
+										class="py-2.5 px-5 bg-secondary hover:bg-secondary/80 text-secondary-foreground font-semibold rounded-xl text-sm transition border border-border"
 									>
 										Batal Edit
 									</button>
 								{/if}
 								<button
 									type="submit"
-									class="py-2.5 px-6 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition"
+									class="py-2.5 px-6 bg-primary text-primary-foreground font-bold rounded-xl text-sm transition hover:opacity-90 shadow-sm"
 								>
 									{editingSentenceId ? 'Simpan Perubahan' : 'Tambah Kalimat'}
 								</button>
@@ -813,41 +859,43 @@
 					<!-- Sentences List -->
 					<div class="flex flex-col gap-3">
 						{#each data.sentences as s (s.id)}
-							<div class="p-5 bg-slate-900/60 border border-slate-800 hover:border-slate-700 rounded-3xl transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+							<div class="p-5 bg-card text-card-foreground border border-border hover:border-primary/40 rounded-3xl transition shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 								<div class="flex-1">
 									<div class="flex items-center gap-2 mb-1.5">
-										<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase {s.language === 'id' ? 'bg-amber-500/10 text-amber-400' : 'bg-blue-500/10 text-blue-400'}">
+										<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase border {s.language === 'id' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20'}">
 											{s.language}
 										</span>
-										<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-slate-800 text-slate-400">
+										<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-muted text-muted-foreground border border-border">
 											{s.difficulty}
 										</span>
 										{#if s.author}
-											<span class="text-xs text-slate-400 italic">— {s.author}</span>
+											<span class="text-xs text-muted-foreground italic">— {s.author}</span>
 										{/if}
 									</div>
-									<p class="text-slate-200 text-sm leading-relaxed font-mono">"{s.text}"</p>
+									<p class="text-foreground text-sm leading-relaxed font-mono">"{s.text}"</p>
 								</div>
 
 								<div class="flex items-center gap-2 shrink-0">
 									<button
 										type="button"
 										onclick={() => startEditSentence(s)}
-										class="px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition"
+										class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-xl border border-border transition shadow-xs"
 									>
-										Edit
+										<Edit3 class="w-3.5 h-3.5" />
+										<span>Edit</span>
 									</button>
 									<button
 										type="button"
 										onclick={() => removeSentence(s.id)}
-										class="px-3 py-1.5 text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl transition"
+										class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-destructive/10 hover:bg-destructive/20 text-destructive rounded-xl transition"
 									>
-										Hapus
+										<Trash2 class="w-3.5 h-3.5" />
+										<span>Hapus</span>
 									</button>
 								</div>
 							</div>
 						{:else}
-							<div class="py-12 text-center text-slate-500 text-sm">
+							<div class="py-12 text-center text-muted-foreground text-sm">
 								Belum ada kalimat yang tersimpan.
 							</div>
 						{/each}
@@ -857,23 +905,26 @@
 
 			<!-- TAB 3: USERS & TEST RESULTS -->
 			{#if activeTab === 'users'}
-				<div class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl">
-					<div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+				<div class="p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm">
+					<div class="flex items-center gap-3 pb-4 border-b border-border mb-4">
+						<div class="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
+							<Users class="w-5 h-5" />
+						</div>
 						<div>
-							<h3 class="text-lg font-bold text-white">Daftar Pengguna & Skor ({data.users.length})</h3>
-							<p class="text-xs text-slate-400">Pengguna guest yang tersimpan di database SQLite.</p>
+							<h3 class="text-lg font-bold text-foreground">Daftar Pengguna & Skor ({data.users.length})</h3>
+							<p class="text-xs text-muted-foreground">Pengguna guest yang tersimpan di database SQLite.</p>
 						</div>
 					</div>
 
 					{#if data.users.length === 0}
-						<div class="py-8 text-center text-slate-500 text-sm">
+						<div class="py-8 text-center text-muted-foreground text-sm">
 							Belum ada pengguna terdaftar.
 						</div>
 					{:else}
 						<div class="overflow-x-auto">
 							<table class="w-full text-left text-sm">
 								<thead>
-									<tr class="text-xs text-slate-400 uppercase border-b border-slate-800/80 font-mono">
+									<tr class="text-xs text-muted-foreground uppercase border-b border-border font-mono font-semibold">
 										<th class="py-3 px-3">Nama</th>
 										<th class="py-3 px-3 text-right">Tes Dilakukan</th>
 										<th class="py-3 px-3 text-right">Best WPM</th>
@@ -881,29 +932,30 @@
 										<th class="py-3 px-3 text-center">Aksi</th>
 									</tr>
 								</thead>
-								<tbody class="divide-y divide-slate-800/50">
+								<tbody class="divide-y divide-border/60">
 									{#each data.users as u (u.id)}
-										<tr class="hover:bg-slate-800/30 transition">
-											<td class="py-3 px-3 font-semibold text-slate-200">
+										<tr class="hover:bg-muted/50 transition">
+											<td class="py-3 px-3 font-semibold text-foreground">
 												{u.name}
 											</td>
-											<td class="py-3 px-3 text-right font-mono text-slate-300">
+											<td class="py-3 px-3 text-right font-mono text-foreground/80">
 												{u.testCount}x
 											</td>
-											<td class="py-3 px-3 text-right font-mono font-bold text-emerald-400">
+											<td class="py-3 px-3 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
 												{u.bestWpm} WPM
 											</td>
-											<td class="py-3 px-3 text-right text-xs text-slate-400">
+											<td class="py-3 px-3 text-right text-xs text-muted-foreground">
 												{new Date(u.lastUsedAt).toLocaleDateString('id-ID')}
 											</td>
 											<td class="py-3 px-3 text-center">
 												<button
 													type="button"
 													onclick={() => removeUser(u.id, u.name)}
-													class="px-2.5 py-1 text-xs text-rose-400 hover:text-white bg-rose-500/10 hover:bg-rose-500/20 rounded-lg transition"
+													class="inline-flex items-center gap-1 px-2.5 py-1 text-xs text-destructive hover:bg-destructive/10 border border-destructive/20 rounded-lg transition"
 													title="Hapus pengguna dan semua hasilnya"
 												>
-													Hapus
+													<Trash2 class="w-3 h-3" />
+													<span>Hapus</span>
 												</button>
 											</td>
 										</tr>
@@ -919,71 +971,74 @@
 			{#if activeTab === 'competitions'}
 				<div class="flex flex-col gap-6">
 					{#if compActionMessage}
-						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold rounded-2xl text-center">
+						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm font-semibold rounded-2xl text-center">
 							{compActionMessage}
 						</div>
 					{/if}
 
 					<!-- Create Competition Form -->
-					<div class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl">
-						<h3 class="text-base font-bold text-white mb-3">🏆 Buat Kompetisi Mengetik Baru</h3>
+					<div class="p-6 bg-card text-card-foreground border border-border rounded-3xl shadow-sm">
+						<div class="flex items-center gap-2 mb-3">
+							<Trophy class="w-4 h-4 text-primary" />
+							<h3 class="text-base font-bold text-foreground">Buat Kompetisi Mengetik Baru</h3>
+						</div>
 						<form onsubmit={createCompetitionSubmit} class="flex flex-col gap-4">
 							<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 								<div>
-									<label for="comp-title" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Judul Kompetisi</label>
+									<label for="comp-title" class="block text-xs font-semibold text-muted-foreground uppercase mb-1">Judul Kompetisi</label>
 									<input
 										id="comp-title"
 										type="text"
 										bind:value={newCompTitle}
 										placeholder="Misal: Kejuaraan Mengetik Nasional 2026"
-										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+										class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
 										required
 									/>
 								</div>
 								<div>
-									<label for="comp-duration" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Durasi Tes (Detik)</label>
+									<label for="comp-duration" class="block text-xs font-semibold text-muted-foreground uppercase mb-1">Durasi Tes (Detik)</label>
 									<input
 										id="comp-duration"
 										type="number"
 										min="10"
 										max="300"
 										bind:value={newCompDuration}
-										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 font-mono"
+										class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 font-mono"
 										required
 									/>
 								</div>
 							</div>
 
 							<div>
-								<label for="comp-desc" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Deskripsi / Peraturan Singkat</label>
+								<label for="comp-desc" class="block text-xs font-semibold text-muted-foreground uppercase mb-1">Deskripsi / Peraturan Singkat</label>
 								<input
 									id="comp-desc"
 									type="text"
 									bind:value={newCompDesc}
 									placeholder="Misal: Ketik teks berikut secepat dan seakurat mungkin untuk memperebutkan podium!"
-									class="w-full px-4 py-2 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+									class="w-full px-4 py-2 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
 								/>
 							</div>
 
 							<div>
-								<label for="comp-text" class="block text-xs font-semibold text-slate-300 uppercase mb-1">Teks Seragam Kompetisi (Exact Text yang Diketik Semua Peserta)</label>
+								<label for="comp-text" class="block text-xs font-semibold text-muted-foreground uppercase mb-1">Teks Seragam Kompetisi (Exact Text yang Diketik Semua Peserta)</label>
 								<textarea
 									id="comp-text"
 									bind:value={newCompText}
 									rows="3"
 									placeholder="Ketik teks yang akan dijadikan materi kompetisi..."
-									class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 resize-none font-mono"
+									class="w-full px-4 py-2.5 bg-background border border-input rounded-xl text-foreground text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 resize-none font-mono"
 									required
 								></textarea>
 							</div>
 
 							<div class="flex items-center justify-between gap-3">
 								<div class="flex items-center gap-2">
-									<label for="comp-status" class="text-xs font-semibold text-slate-300 uppercase">Status:</label>
+									<label for="comp-status" class="text-xs font-semibold text-muted-foreground uppercase">Status:</label>
 									<select
 										id="comp-status"
 										bind:value={newCompStatus}
-										class="px-3 py-1.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-xs outline-none focus:border-amber-400 font-semibold"
+										class="px-3 py-1.5 bg-background border border-input rounded-xl text-foreground text-xs outline-none focus:border-primary font-semibold"
 									>
 										<option value="active">Aktif (Bisa Diikuti)</option>
 										<option value="ended">Selesai (Ditutup)</option>
@@ -992,7 +1047,7 @@
 
 								<button
 									type="submit"
-									class="py-2.5 px-6 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition"
+									class="py-2.5 px-6 bg-primary text-primary-foreground font-bold rounded-xl text-sm transition hover:opacity-90 shadow-sm"
 								>
 									Buat Kompetisi
 								</button>
@@ -1003,20 +1058,21 @@
 					<!-- Existing Competitions List -->
 					<div class="flex flex-col gap-3">
 						{#each data.competitions as c (c.id)}
-							<div class="p-5 bg-slate-900/60 border border-slate-800 hover:border-slate-700 rounded-3xl transition flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+							<div class="p-5 bg-card text-card-foreground border border-border hover:border-primary/40 rounded-3xl transition shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 								<div class="flex-1 min-w-0">
 									<div class="flex items-center gap-2 mb-1.5">
-										<span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase {c.status === 'active' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-800 text-slate-400'}">
-											{c.status}
+										<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-bold uppercase {c.status === 'active' ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20' : 'bg-muted text-muted-foreground border border-border'}">
+											<span class="w-1.5 h-1.5 rounded-full {c.status === 'active' ? 'bg-emerald-500' : 'bg-muted-foreground'}"></span>
+											<span>{c.status}</span>
 										</span>
-										<span class="text-xs text-slate-400 font-mono">{c.duration}s</span>
-										<span class="text-xs text-slate-500">• {c.entryCount ?? 0} peserta</span>
+										<span class="text-xs text-muted-foreground font-mono">{c.duration}s</span>
+										<span class="text-xs text-muted-foreground">• {c.entryCount ?? 0} peserta</span>
 									</div>
-									<h4 class="text-base font-bold text-white mb-1 truncate">{c.title}</h4>
+									<h4 class="text-base font-bold text-foreground mb-1 truncate">{c.title}</h4>
 									{#if c.description}
-										<p class="text-xs text-slate-400 line-clamp-1 mb-2">{c.description}</p>
+										<p class="text-xs text-muted-foreground line-clamp-1 mb-2">{c.description}</p>
 									{/if}
-									<p class="text-xs text-slate-400 font-mono line-clamp-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+									<p class="text-xs text-foreground/80 font-mono line-clamp-2 bg-muted/40 p-2.5 rounded-xl border border-border">
 										"{c.customText}"
 									</p>
 								</div>
@@ -1025,15 +1081,16 @@
 									<a
 										href={`/competitions/${c.slug}`}
 										target="_blank"
-										class="px-3.5 py-2 text-xs font-semibold bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 rounded-xl transition"
+										class="inline-flex items-center gap-1 px-3.5 py-2 text-xs font-semibold bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-xl transition shadow-xs"
 									>
-										Buka Arena ↗
+										<span>Buka Arena</span>
+										<ExternalLink class="w-3.5 h-3.5" />
 									</a>
 									{#if c.status === 'active'}
 										<button
 											type="button"
 											onclick={() => updateCompStatus(c.id, 'ended')}
-											class="px-3.5 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition"
+											class="px-3.5 py-2 text-xs font-semibold bg-secondary hover:bg-secondary/80 text-secondary-foreground border border-border rounded-xl transition"
 										>
 											Tutup
 										</button>
@@ -1041,7 +1098,7 @@
 										<button
 											type="button"
 											onclick={() => updateCompStatus(c.id, 'active')}
-											class="px-3.5 py-2 text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl transition"
+											class="px-3.5 py-2 text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-xl transition"
 										>
 											Aktifkan
 										</button>
@@ -1049,15 +1106,16 @@
 									<button
 										type="button"
 										onclick={() => removeCompetition(c.id)}
-										class="px-3 py-2 text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 rounded-xl transition"
+										class="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold bg-destructive/10 hover:bg-destructive/20 text-destructive border border-destructive/20 rounded-xl transition"
 										title="Hapus kompetisi"
 									>
-										Hapus
+										<Trash2 class="w-3.5 h-3.5" />
+										<span>Hapus</span>
 									</button>
 								</div>
 							</div>
 						{:else}
-							<div class="py-12 text-center text-slate-500 text-sm">
+							<div class="py-12 text-center text-muted-foreground text-sm">
 								Belum ada kompetisi yang dibuat.
 							</div>
 						{/each}

@@ -2,8 +2,20 @@
 	import './layout.css';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { session, loadSession, setName, clearName } from '$lib/stores/session.svelte';
+	import { session, loadSession, setName } from '$lib/stores/session.svelte';
 	import { defaultAppConfig } from '$lib/config';
+	import { themeState, initTheme, toggleTheme } from '$lib/stores/theme.svelte';
+	import {
+		Keyboard,
+		Trophy,
+		Settings,
+		Sun,
+		Moon,
+		User,
+		X,
+		Check,
+		Edit3
+	} from '@lucide/svelte';
 
 	let { data, children } = $props();
 	let showNameModal = $state(false);
@@ -12,6 +24,7 @@
 	let appConfig = $derived(data?.appConfig || defaultAppConfig);
 
 	onMount(() => {
+		initTheme();
 		loadSession();
 	});
 
@@ -35,28 +48,24 @@
 	<link rel="icon" href={appConfig.logoUrl || '/favicon.svg'} />
 </svelte:head>
 
-<div class="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-amber-400/30 selection:text-amber-200">
+<div class="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-200">
 	<!-- Navbar Header -->
-	<header class="sticky top-0 z-40 w-full backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
-		<div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+	<header class="sticky top-0 z-40 w-full backdrop-blur-md bg-background/80 border-b border-border">
+		<div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
 			<!-- Logo & Company Branding -->
-			<a href="/" class="flex items-center gap-3 text-lg font-extrabold tracking-tight group">
-				<div class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center p-1 shadow-md shadow-amber-500/10 group-hover:border-amber-500/40 group-hover:scale-105 transition">
+			<a href="/" class="flex items-center gap-3 text-lg font-bold tracking-tight group shrink-0">
+				<div class="w-10 h-10 rounded-xl bg-card border border-border flex items-center justify-center p-1.5 shadow-sm group-hover:border-primary/50 group-hover:scale-105 transition">
 					<img
 						src={appConfig.logoUrl || '/logo.svg'}
 						alt={appConfig.companyName}
 						class="w-full h-full object-contain"
-						onerror={(e) => {
-							// Fallback if image fails to load
-							(e.currentTarget as HTMLElement).style.display = 'none';
-						}}
 					/>
 				</div>
 				<div class="flex flex-col">
-					<span class="text-white font-bold leading-tight group-hover:text-amber-400 transition text-sm sm:text-base">
+					<span class="text-foreground font-bold leading-tight group-hover:text-primary transition text-sm sm:text-base">
 						{appConfig.appName}
 					</span>
-					<span class="text-[10px] uppercase tracking-wider text-amber-400/90 font-bold -mt-0.5">
+					<span class="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
 						{appConfig.companyName}
 					</span>
 				</div>
@@ -66,44 +75,64 @@
 			<nav class="flex items-center gap-1 sm:gap-2">
 				<a
 					href="/"
-					class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-xl transition {currentPath === '/' ? 'bg-slate-800 text-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+					class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-xl transition {currentPath === '/' ? 'bg-primary text-primary-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
-					⚡ Tes Mengetik
+					<Keyboard class="w-4 h-4" />
+					<span>Tes Mengetik</span>
 				</a>
 				<a
 					href="/competitions"
-					class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-xl transition {currentPath.startsWith('/competitions') ? 'bg-slate-800 text-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+					class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-xl transition {currentPath.startsWith('/competitions') ? 'bg-primary text-primary-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
-					🏆 Kompetisi
+					<Trophy class="w-4 h-4" />
+					<span>Kompetisi</span>
 				</a>
 				<a
 					href="/admin"
-					class="px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-xl transition {currentPath.startsWith('/admin') ? 'bg-slate-800 text-amber-400' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+					class="flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-xl transition {currentPath.startsWith('/admin') ? 'bg-primary text-primary-foreground shadow-sm font-semibold' : 'text-muted-foreground hover:text-foreground hover:bg-muted'}"
 				>
-					⚙️ Admin
+					<Settings class="w-4 h-4" />
+					<span>Admin</span>
 				</a>
 			</nav>
 
-			<!-- User session badge -->
+			<!-- Right tools: User session badge & Theme Toggle -->
 			<div class="flex items-center gap-2">
+				<!-- Theme Toggle Button -->
+				<button
+					type="button"
+					onclick={toggleTheme}
+					class="w-9 h-9 rounded-xl bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition shadow-sm"
+					title={themeState.current === 'dark' ? 'Ganti ke Mode Terang' : 'Ganti ke Mode Gelap'}
+					aria-label="Toggle theme"
+				>
+					{#if themeState.current === 'dark'}
+						<Sun class="w-4 h-4 text-amber-400" />
+					{:else}
+						<Moon class="w-4 h-4 text-slate-700" />
+					{/if}
+				</button>
+
+				<!-- User Badge -->
 				{#if session.name}
 					<button
 						type="button"
 						onclick={openNameModal}
-						class="flex items-center gap-2 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl text-xs font-medium text-slate-300 transition"
-						title="Klik untuk ubah nama"
+						class="flex items-center gap-2 px-3 py-1.5 bg-card hover:bg-muted border border-border rounded-xl text-xs font-medium text-foreground transition shadow-sm"
+						title="Ubah nama pengetik"
 					>
-						<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-						<span class="truncate max-w-[120px] font-bold text-amber-400">{session.name}</span>
-						<span class="text-slate-400 text-[11px]">(ubah)</span>
+						<User class="w-3.5 h-3.5 text-primary" />
+						<span class="truncate max-w-[110px] font-semibold">{session.name}</span>
+						<Edit3 class="w-3 h-3 text-muted-foreground" />
 					</button>
 				{:else}
 					<button
 						type="button"
 						onclick={() => (showNameModal = true)}
-						class="px-3 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 rounded-xl text-xs font-bold transition"
+						class="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 rounded-xl text-xs font-semibold transition"
 					>
-						+ Isi Nama
+						<User class="w-3.5 h-3.5" />
+						<span>Isi Nama</span>
 					</button>
 				{/if}
 			</div>
@@ -116,24 +145,35 @@
 	</main>
 
 	<!-- Footer -->
-	<footer class="w-full border-t border-slate-900 py-6 text-center text-xs text-slate-500">
+	<footer class="w-full border-t border-border py-6 text-center text-xs text-muted-foreground bg-card/30">
 		<div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
 			<div class="flex items-center gap-2">
 				<img src={appConfig.logoUrl || '/logo.svg'} alt={appConfig.companyName} class="w-5 h-5 object-contain" />
 				<p>{appConfig.appName} &copy; {new Date().getFullYear()} {appConfig.companyName}. {appConfig.tagline}</p>
 			</div>
-			<p class="font-mono text-[11px] text-slate-600">Tekan <kbd class="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">Tab</kbd> untuk reset tes seketika</p>
+			<p class="font-mono text-[11px] text-muted-foreground">
+				Tekan <kbd class="px-1.5 py-0.5 bg-muted border border-border rounded text-foreground font-semibold">Tab</kbd> untuk mengulang tes seketika
+			</p>
 		</div>
 	</footer>
 
 	<!-- Name Edit Modal -->
 	{#if showNameModal}
-		<div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+		<div class="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_static_element_interactions -->
-			<div class="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative" onclick={(e) => e.stopPropagation()}>
-				<h3 class="text-lg font-bold text-white mb-2">Ganti Nama Pengetik</h3>
-				<p class="text-xs text-slate-400 mb-4">Nama ini akan digunakan pada papan peringkat dan catatan kompetisi.</p>
+			<div class="w-full max-w-sm bg-card border border-border rounded-2xl p-6 shadow-xl relative" onclick={(e) => e.stopPropagation()}>
+				<div class="flex items-center justify-between mb-2">
+					<h3 class="text-base font-bold text-foreground">Ganti Nama Pengetik</h3>
+					<button
+						type="button"
+						onclick={() => (showNameModal = false)}
+						class="text-muted-foreground hover:text-foreground transition p-1"
+					>
+						<X class="w-4 h-4" />
+					</button>
+				</div>
+				<p class="text-xs text-muted-foreground mb-4">Nama ini akan dicatat pada skor tes dan kompetisi.</p>
 
 				<form onsubmit={saveModalName} class="flex flex-col gap-3">
 					<input
@@ -141,21 +181,22 @@
 						bind:value={editNameInput}
 						maxlength="30"
 						placeholder="Nama baru..."
-						class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white outline-none focus:border-amber-400 text-sm font-medium"
+						class="w-full px-3.5 py-2.5 bg-background border border-input rounded-xl text-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary text-sm font-medium transition"
 					/>
 					<div class="flex items-center gap-2 mt-2">
 						<button
 							type="button"
 							onclick={() => (showNameModal = false)}
-							class="flex-1 py-2 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition"
+							class="flex-1 py-2 text-xs font-semibold bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-xl transition"
 						>
 							Batal
 						</button>
 						<button
 							type="submit"
-							class="flex-1 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl transition shadow"
+							class="flex-1 py-2 text-xs font-bold bg-primary text-primary-foreground hover:opacity-90 rounded-xl transition shadow-sm flex items-center justify-center gap-1"
 						>
-							Simpan
+							<Check class="w-3.5 h-3.5" />
+							<span>Simpan</span>
 						</button>
 					</div>
 				</form>
