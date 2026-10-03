@@ -10,7 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>Arena Kompetisi Mengetik — SpeedType</title>
+	<title>Arena Kompetisi Mengetik — {data.appConfig?.companyName || 'Citilumb'}</title>
 </svelte:head>
 
 <div class="flex flex-col gap-8 max-w-5xl mx-auto">
@@ -18,7 +18,7 @@
 	<div class="p-8 sm:p-10 bg-gradient-to-br from-amber-500/10 via-slate-900 to-slate-900 border border-amber-500/20 rounded-3xl shadow-2xl relative overflow-hidden">
 		<div class="relative z-10 max-w-2xl">
 			<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold mb-4 border border-amber-400/30">
-				<span>🏆 Arena Turnamen Mengetik</span>
+				<span>🏆 Arena Turnamen Mengetik {data.appConfig?.companyName || 'Citilumb'}</span>
 			</div>
 			<h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
 				Tantang Pengetik Lain di <span class="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">Kompetisi Resmi</span>

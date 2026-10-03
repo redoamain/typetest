@@ -106,9 +106,18 @@ export const competitionEntries = sqliteTable(
 	]
 );
 
+export const appSettings = sqliteTable('app_settings', {
+	key: text('key').primaryKey(),
+	value: text('value').notNull(),
+	updatedAt: integer('updated_at', { mode: 'timestamp' })
+		.notNull()
+		.default(sql`(unixepoch())`)
+});
+
 export type User = typeof users.$inferSelect;
 export type Result = typeof results.$inferSelect;
 export type Word = typeof words.$inferSelect;
 export type Sentence = typeof sentences.$inferSelect;
 export type CompetitionTable = typeof competitions.$inferSelect;
 export type CompetitionEntryTable = typeof competitionEntries.$inferSelect;
+export type AppSetting = typeof appSettings.$inferSelect;

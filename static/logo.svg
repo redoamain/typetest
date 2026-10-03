@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="citilumbGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="innerGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background rounded hexagon -->
+  <rect x="15" y="15" width="170" height="170" rx="42" fill="#0f172a" stroke="#1e293b" stroke-width="4"/>
+
+  <!-- Stylized Modern 'C' and speed wings for Citilumb -->
+  <path d="M 140 65 C 130 50 112 42 96 42 C 64 42 40 67 40 100 C 40 133 64 158 96 158 C 114 158 132 148 142 133" 
+        fill="none" 
+        stroke="url(#citilumbGrad)" 
+        stroke-width="20" 
+        stroke-linecap="round"/>
+
+  <!-- Speed accent dots / keys inside -->
+  <circle cx="102" cy="100" r="14" fill="url(#innerGrad)" filter="url(#glow)"/>
+  <rect x="126" y="93" width="28" height="14" rx="7" fill="#38bdf8"/>
+  <rect x="126" y="72" width="18" height="10" rx="5" fill="#f59e0b" opacity="0.8"/>
+  <rect x="126" y="118" width="18" height="10" rx="5" fill="#f59e0b" opacity="0.8"/>
+</svg>

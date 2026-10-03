@@ -1,7 +1,16 @@
 import { desc, eq, sql, and } from 'drizzle-orm';
 import { db } from './index';
-import { users, results, words, sentences, competitions, competitionEntries } from './schema';
+import {
+	users,
+	results,
+	words,
+	sentences,
+	competitions,
+	competitionEntries,
+	appSettings
+} from './schema';
 import type { Language } from '$lib/types';
+import { defaultAppConfig, type AppConfig } from '$lib/config';
 import enWords from '$lib/data/words-en.json';
 import idWords from '$lib/data/words-id.json';
 
@@ -400,4 +409,50 @@ export function getCompetitionLeaderboard(competitionId: number) {
 		...entry,
 		rank: index + 1
 	}));
+}
+
+// App & Company Settings (Citilumb Branding)
+export function getAppSettings(): AppConfig {
+	try {
+		const rows = db.select().from(appSettings).all();
+		const map: Record<string, string> = {};
+		for (const r of rows) {
+			map[r.key] = r.value;
+		}
+
+		return {
+			appName: map['app_name'] || defaultAppConfig.appName,
+			companyName: map['company_name'] || defaultAppConfig.companyName,
+			tagline: map['tagline'] || defaultAppConfig.tagline,
+			logoUrl: map['logo_url'] || defaultAppConfig.logoUrl,
+			description: map['description'] || defaultAppConfig.description
+		};
+	} catch {
+		return defaultAppConfig;
+	}
+}
+
+export function updateAppSettings(settings: Partial<AppConfig>) {
+	const keyMap: Record<keyof AppConfig, string> = {
+		appName: 'app_name',
+		companyName: 'company_name',
+		tagline: 'tagline',
+		logoUrl: 'logo_url',
+		description: 'description'
+	};
+
+	return db.transaction((tx) => {
+		for (const [prop, val] of Object.entries(settings)) {
+			if (val !== undefined && prop in keyMap) {
+				const dbKey = keyMap[prop as keyof AppConfig];
+				tx.insert(appSettings)
+					.values({ key: dbKey, value: String(val).trim() })
+					.onConflictDoUpdate({
+						target: appSettings.key,
+						set: { value: String(val).trim(), updatedAt: sql`(unixepoch())` }
+					})
+					.run();
+			}
+		}
+	});
 }

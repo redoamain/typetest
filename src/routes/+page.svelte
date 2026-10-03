@@ -104,13 +104,19 @@
 </script>
 
 <div class="flex flex-col items-center gap-8">
-	<!-- Hero Header -->
+	<!-- Hero Header with Citilumb Branding -->
 	<div class="text-center max-w-2xl mx-auto pt-2">
+		<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-semibold text-slate-300 mb-3 shadow-sm">
+			<img src={data.appConfig?.logoUrl || '/logo.svg'} alt={data.appConfig?.companyName || 'Citilumb'} class="w-4 h-4 object-contain" />
+			<span class="text-amber-400 font-bold">{data.appConfig?.companyName || 'Citilumb'}</span>
+			<span class="text-slate-500">•</span>
+			<span>Platform Resmi Mengetik</span>
+		</div>
 		<h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
-			Uji Kecepatan <span class="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">Mengetikmu</span>
+			Uji Kecepatan <span class="bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent">Mengetik</span>
 		</h1>
 		<p class="text-sm text-slate-400">
-			Tingkatkan kecepatan dan akurasi jarimu dengan tes real-time interaktif.
+			{data.appConfig?.tagline || 'Tingkatkan kecepatan dan akurasi jarimu dengan tes real-time interaktif.'}
 		</p>
 	</div>
 

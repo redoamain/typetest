@@ -87,7 +87,30 @@ export function initDb(db: BetterSQLite3Database<typeof schema>, client: Databas
 
 			CREATE INDEX IF NOT EXISTS comp_entries_comp_idx ON competition_entries(competition_id);
 			CREATE INDEX IF NOT EXISTS comp_entries_user_idx ON competition_entries(user_id);
+
+			CREATE TABLE IF NOT EXISTS app_settings (
+				key TEXT PRIMARY KEY,
+				value TEXT NOT NULL,
+				updated_at INTEGER NOT NULL DEFAULT (unixepoch())
+			);
 		`);
+
+		// Seed initial app_settings if empty
+		const settingsCountResult = db
+			.select({ count: sql<number>`count(*)` })
+			.from(schema.appSettings)
+			.get();
+		if (!settingsCountResult || settingsCountResult.count === 0) {
+			db.insert(schema.appSettings)
+				.values([
+					{ key: 'app_name', value: 'Citilumb SpeedType' },
+					{ key: 'company_name', value: 'Citilumb' },
+					{ key: 'tagline', value: 'Platform Resmi Tes Kecepatan Mengetik & Turnamen Citilumb' },
+					{ key: 'logo_url', value: '/logo.svg' },
+					{ key: 'description', value: 'Tingkatkan akurasi dan kecepatan mengetik seluruh tim dan karyawan Citilumb.' }
+				])
+				.run();
+		}
 
 		// Seed initial words if empty
 		const wordCountResult = db.select({ count: sql<number>`count(*)` }).from(schema.words).get();

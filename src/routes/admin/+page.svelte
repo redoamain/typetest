@@ -10,7 +10,61 @@
 	let isLoggingIn = $state(false);
 
 	// Active Admin Tab
-	let activeTab = $state<'words' | 'sentences' | 'users' | 'competitions'>('words');
+	let activeTab = $state<'branding' | 'words' | 'sentences' | 'users' | 'competitions'>('branding');
+
+	// App & Company Settings state (Citilumb Branding)
+	let cfgAppName = $state('Citilumb SpeedType');
+	let cfgCompanyName = $state('Citilumb');
+	let cfgTagline = $state('');
+	let cfgLogoUrl = $state('/logo.svg');
+	let cfgDescription = $state('');
+	let settingsMessage = $state('');
+	let isSavingSettings = $state(false);
+
+	$effect(() => {
+		if (data.appConfig) {
+			cfgAppName = data.appConfig.appName || 'Citilumb SpeedType';
+			cfgCompanyName = data.appConfig.companyName || 'Citilumb';
+			cfgTagline = data.appConfig.tagline || '';
+			cfgLogoUrl = data.appConfig.logoUrl || '/logo.svg';
+			cfgDescription = data.appConfig.description || '';
+		}
+	});
+
+	async function saveSettingsSubmit(e: SubmitEvent) {
+		e.preventDefault();
+		isSavingSettings = true;
+		settingsMessage = '';
+		try {
+			const res = await fetch('/api/admin/settings', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					appName: cfgAppName,
+					companyName: cfgCompanyName,
+					tagline: cfgTagline,
+					logoUrl: cfgLogoUrl,
+					description: cfgDescription
+				})
+			});
+			if (!res.ok) throw new Error('Gagal menyimpan pengaturan');
+			settingsMessage = 'Pengaturan nama dan logo Citilumb berhasil disimpan!';
+			setTimeout(() => (settingsMessage = ''), 3500);
+			await invalidateAll();
+		} catch (err: unknown) {
+			settingsMessage = err instanceof Error ? err.message : 'Error';
+		} finally {
+			isSavingSettings = false;
+		}
+	}
+
+	function resetDefaultBranding() {
+		cfgAppName = 'Citilumb SpeedType';
+		cfgCompanyName = 'Citilumb';
+		cfgTagline = 'Platform Resmi Tes Kecepatan Mengetik & Turnamen Citilumb';
+		cfgLogoUrl = '/logo.svg';
+		cfgDescription = 'Tingkatkan akurasi dan kecepatan mengetik seluruh tim dan karyawan Citilumb.';
+	}
 
 	// Words management state
 	let wordLangFilter = $state<'all' | 'id' | 'en'>('all');
@@ -380,6 +434,13 @@
 			<div class="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto">
 				<button
 					type="button"
+					onclick={() => (activeTab = 'branding')}
+					class="px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap {activeTab === 'branding' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
+				>
+					🏢 Branding & Logo Citilumb
+				</button>
+				<button
+					type="button"
 					onclick={() => (activeTab = 'words')}
 					class="px-4 py-2 rounded-xl text-sm font-bold transition whitespace-nowrap {activeTab === 'words' ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white hover:bg-slate-900'}"
 				>
@@ -407,6 +468,124 @@
 					🏆 Kompetisi ({data.competitions.length})
 				</button>
 			</div>
+
+			<!-- TAB 0: BRANDING & LOGO MANAGEMENT (CITILUMB) -->
+			{#if activeTab === 'branding'}
+				<div class="flex flex-col gap-6">
+					{#if settingsMessage}
+						<div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm font-semibold rounded-2xl text-center">
+							{settingsMessage}
+						</div>
+					{/if}
+
+					<div class="p-6 bg-slate-900/80 border border-slate-800 rounded-3xl shadow-xl">
+						<div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 mb-6 gap-2">
+							<div>
+								<h3 class="text-lg font-bold text-white">🏢 Pengaturan Identitas & Logo Citilumb</h3>
+								<p class="text-xs text-slate-400">Atur nama aplikasi, nama perusahaan, slogan, dan logo yang tampil di seluruh sistem.</p>
+							</div>
+							<button
+								type="button"
+								onclick={resetDefaultBranding}
+								class="px-3.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition self-start sm:self-auto"
+							>
+								Reset ke Default Citilumb
+							</button>
+						</div>
+
+						<form onsubmit={saveSettingsSubmit} class="flex flex-col gap-5">
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<div>
+									<label for="cfg-app-name" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Nama Aplikasi</label>
+									<input
+										id="cfg-app-name"
+										type="text"
+										bind:value={cfgAppName}
+										placeholder="Misal: Citilumb SpeedType"
+										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+										required
+									/>
+								</div>
+								<div>
+									<label for="cfg-comp-name" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Nama Perusahaan</label>
+									<input
+										id="cfg-comp-name"
+										type="text"
+										bind:value={cfgCompanyName}
+										placeholder="Misal: Citilumb"
+										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+										required
+									/>
+								</div>
+							</div>
+
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<div>
+									<label for="cfg-logo-url" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">URL / Path Logo</label>
+									<input
+										id="cfg-logo-url"
+										type="text"
+										bind:value={cfgLogoUrl}
+										placeholder="Misal: /logo.svg atau https://..."
+										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 font-mono"
+										required
+									/>
+									<span class="text-[11px] text-slate-500 mt-1 block">Default: <code class="text-amber-400">/logo.svg</code> (tersedia logo Citilumb bawaan)</span>
+								</div>
+								<div>
+									<label for="cfg-tagline" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Slogan / Tagline</label>
+									<input
+										id="cfg-tagline"
+										type="text"
+										bind:value={cfgTagline}
+										placeholder="Misal: Platform Resmi Tes Kecepatan Mengetik & Turnamen Citilumb"
+										class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400"
+									/>
+								</div>
+							</div>
+
+							<div>
+								<label for="cfg-desc" class="block text-xs font-semibold text-slate-300 uppercase mb-1.5">Deskripsi Perusahaan / Pengantar</label>
+								<textarea
+									id="cfg-desc"
+									bind:value={cfgDescription}
+									rows="2"
+									placeholder="Deskripsi singkat mengenai tes mengetik untuk karyawan Citilumb..."
+									class="w-full px-4 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm outline-none focus:border-amber-400 resize-none"
+								></textarea>
+							</div>
+
+							<!-- Live Preview Card -->
+							<div class="p-5 bg-slate-950 border border-slate-800 rounded-2xl">
+								<span class="text-xs uppercase tracking-wider text-slate-400 font-bold block mb-3">Live Preview Tampilan Navbar & Logo</span>
+								<div class="flex items-center gap-3 p-3 bg-slate-900 border border-slate-800 rounded-xl max-w-md">
+									<div class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center p-1 overflow-hidden shrink-0">
+										<img
+											src={cfgLogoUrl || '/logo.svg'}
+											alt={cfgCompanyName}
+											class="w-full h-full object-contain"
+										/>
+									</div>
+									<div class="flex flex-col min-w-0">
+										<span class="text-white font-bold text-sm truncate">{cfgAppName || 'Nama Aplikasi'}</span>
+										<span class="text-[10px] uppercase tracking-wider text-amber-400 font-bold truncate">{cfgCompanyName || 'Nama Perusahaan'}</span>
+									</div>
+								</div>
+							</div>
+
+							<div class="flex items-center justify-end gap-3 pt-2">
+								<button
+									type="submit"
+									disabled={isSavingSettings}
+									class="py-3 px-8 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-2xl shadow-lg shadow-amber-500/20 transition transform active:scale-95 text-sm disabled:opacity-50"
+								>
+									{isSavingSettings ? 'Menyimpan...' : 'Simpan Pengaturan Citilumb'}
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			{/if}
 
 			<!-- TAB 1: WORDS MANAGEMENT -->
 			{#if activeTab === 'words'}
