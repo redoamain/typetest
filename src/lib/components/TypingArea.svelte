@@ -122,6 +122,15 @@
 		if (e.key === 'Tab' || e.key === 'Escape') {
 			e.preventDefault();
 			reset();
+			return;
+		}
+
+		// Prevent leading space or accidental double spaces from desyncing words
+		if (e.key === ' ') {
+			if (typed.length === 0 || typed.endsWith(' ')) {
+				e.preventDefault();
+				return;
+			}
 		}
 	}
 
@@ -252,13 +261,13 @@
 		onclick={focusInput}
 		class="relative p-8 min-h-[220px] max-h-[340px] overflow-y-auto bg-card text-card-foreground hover:border-primary/40 focus-within:border-primary border-2 border-border rounded-2xl cursor-text transition shadow-sm select-none"
 	>
-		<div class="font-mono text-2xl leading-relaxed tracking-wide select-none break-words">
+		<div class="font-mono text-2xl leading-relaxed tracking-wide select-none whitespace-pre-wrap break-words">
 			{#each text as char, i}
 				{#if i < typed.length}
 					{#if typed[i] === char}
 						<span class="text-emerald-600 dark:text-emerald-400 font-medium transition-colors duration-75">{char}</span>
 					{:else}
-						<span class="text-rose-600 dark:text-rose-400 bg-rose-500/15 rounded px-0.5 border-b-2 border-rose-500">{char}</span>
+						<span class="text-rose-600 dark:text-rose-400 bg-rose-500/20 rounded px-0.5 border-b-2 border-rose-500">{char}</span>
 					{/if}
 				{:else if i === typed.length}
 					<!-- Active Cursor Indicator -->
